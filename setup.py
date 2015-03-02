@@ -40,7 +40,9 @@ setup(
     zip_safe=False,
     install_requires=[
         'setuptools',
-        "attribute_wrapper"
+        "xmltodict",
+        "attribute_wrapper",
+        "pydhtmlparser>=2.0.9",
     ],
     extras_require={
         "test": [
