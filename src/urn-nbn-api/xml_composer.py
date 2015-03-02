@@ -11,6 +11,19 @@ import dhtmlparser
 # Variables ===================================================================
 # Functions & classes =========================================================
 def compose_mono_xml(mods_volume_xml):
+    """
+    Convert MODS to XML, which is required by URN:NBN resolver.
+
+    See:
+        - http://resolver.nkp.cz/api/v3/digDocRegistration.xsd
+        - https://code.google.com/p/czidlo/wiki/ApiV3
+
+    Args:
+        mods_volume_xml (str): MODS volume XML.
+
+    Returns:
+        str: XML for URN:NBN resolver.
+    """
     dom = dhtmlparser.parseString(mods_volume_xml)
     xdom = xmltodict.parse(mods_volume_xml)
 
