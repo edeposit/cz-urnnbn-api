@@ -7,6 +7,7 @@
 import xmltodict
 import dhtmlparser
 
+# http://www.freeformatter.com/xml-validator-xsd.html
 
 # Variables ===================================================================
 # Functions & classes =========================================================
@@ -23,6 +24,9 @@ def compose_mono_xml(mods_volume_xml):
 
     Returns:
         str: XML for URN:NBN resolver.
+
+    Raises:
+        ValueErrro: If can't find required data in MODS (author, title).
     """
     dom = dhtmlparser.parseString(mods_volume_xml)
     xdom = xmltodict.parse(mods_volume_xml)
@@ -51,7 +55,7 @@ def compose_mono_xml(mods_volume_xml):
             "@xmlns:r": "http://resolver.nkp.cz/v3/",
             "r:monograph": {
                 "r:titleInfo": {
-                    "title": title,
+                    "r:title": title,
                 },
                 "r:primaryOriginator": {
                     "@type": "AUTHOR",
@@ -60,12 +64,39 @@ def compose_mono_xml(mods_volume_xml):
             },
         }
     }
+    from collections import OrderedDict
+    output = OrderedDict([
+        ["r:import", OrderedDict([
+            ["@xmlns:r", "http://resolver.nkp.cz/v3/"],
+            ["r:monograph", OrderedDict([
+                ["r:titleInfo", OrderedDict([
+                    ["r:title", title],
+                ])],
+            ])],
+        ])]
+    ])
     mono_root = output["r:import"]["r:monograph"]
 
     # get part title
     part_title = xdom["mods:mods"]["mods:titleInfo"].get("mods:partName", None)
     if part_title:
         mono_root["r:titleInfo"]["r:subTitle"] = part_title
+
+    # # handle ccnb, isbn, uuid
+    def add_identifier_to_mono(mono_root, identifier, out=None):
+        identifiers = xdom["mods:mods"].get("mods:identifier", [])
+        out = out if out is not None else identifier
+
+        tmp = filter(
+            lambda x: x.get("@type", False) == identifier,
+            identifiers
+        )
+        if tmp:
+            mono_root["r:" + out] = tmp[0]["#text"]
+
+    add_identifier_to_mono(mono_root, "ccnb")
+    add_identifier_to_mono(mono_root, "isbn")
+    add_identifier_to_mono(mono_root, "uuid", out="otherId")
 
     # parse form
     forms = dom.match("mods:mods", "mods:physicalDescription", "mods:form")
@@ -74,6 +105,14 @@ def compose_mono_xml(mods_volume_xml):
 
         if forms:
             mono_root["r:documentType"] = forms[0].getContent().decode("utf-8")
+
+    mono_root["r:digitalBorn"] = "true"
+
+    # parse author
+    mono_root["r:primaryOriginator"] = OrderedDict([
+        ["@type", "AUTHOR"],
+        ["#text", author]
+    ])
 
     # parse publication info
     description = xdom["mods:mods"].get("mods:originInfo", None)
@@ -85,31 +124,14 @@ def compose_mono_xml(mods_volume_xml):
         year = description.get("mods:dateIssued", None)
 
         if any([place, publisher, year]):
-            mono_root["r:publication"] = {}
+            mono_root["r:publication"] = OrderedDict()
 
-        if year:
-            mono_root["r:publication"]["r:year"] = year
-        if place:
-            mono_root["r:publication"]["r:place"] = place["#text"]
         if publisher:
             mono_root["r:publication"]["r:publisher"] = publisher
-
-    # parse identifiers
-    identifiers = xdom["mods:mods"].get("mods:identifier", [])
-
-    # handle ccnb
-    ccnb = filter(lambda x: x.get("@type", False) == "ccnb", identifiers)
-    if ccnb:
-        mono_root["r:ccnb"] = ccnb
-
-    # handle isbn
-    isbn = filter(lambda x: x.get("@type", False) == "isbn", identifiers)
-    if isbn:
-        mono_root["r:isbn"] = isbn
-
-    # handle uuid
-    uuid = filter(lambda x: x.get("@type", False) == "uuid", identifiers)
-    if uuid:
-        mono_root["r:otherId"] = uuid
+        if place:
+            mono_root["r:publication"]["r:place"] = place["#text"]
+        if year:
+            mono_root["r:publication"]["r:year"] = year
 
     return xmltodict.unparse(output, pretty=True)
+
