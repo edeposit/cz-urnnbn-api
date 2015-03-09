@@ -4,8 +4,10 @@
 # Interpreter version: python 2.7
 #
 # Imports =====================================================================
+
 import xmltodict
 import dhtmlparser
+from odictliteral import odict
 
 # http://www.freeformatter.com/xml-validator-xsd.html
 
@@ -50,31 +52,20 @@ def compose_mono_xml(mods_volume_xml):
     author = author[0].getContent().decode("utf-8")
 
     # compose output template
-    output = {
-        "r:import": {
+    output = odict[
+        "r:import": odict[
             "@xmlns:r": "http://resolver.nkp.cz/v3/",
-            "r:monograph": {
-                "r:titleInfo": {
+            "r:monograph": odict[
+                "r:titleInfo": odict[
                     "r:title": title,
-                },
-                "r:primaryOriginator": {
+                ],
+                "r:primaryOriginator": odict[
                     "@type": "AUTHOR",
                     "#text": author
-                },
-            },
-        }
-    }
-    from collections import OrderedDict
-    output = OrderedDict([
-        ["r:import", OrderedDict([
-            ["@xmlns:r", "http://resolver.nkp.cz/v3/"],
-            ["r:monograph", OrderedDict([
-                ["r:titleInfo", OrderedDict([
-                    ["r:title", title],
-                ])],
-            ])],
-        ])]
-    ])
+                ],
+            ],
+        ]
+    ]
     mono_root = output["r:import"]["r:monograph"]
 
     # get part title
@@ -82,7 +73,7 @@ def compose_mono_xml(mods_volume_xml):
     if part_title:
         mono_root["r:titleInfo"]["r:subTitle"] = part_title
 
-    # # handle ccnb, isbn, uuid
+    # handle ccnb, isbn, uuid
     def add_identifier_to_mono(mono_root, identifier, out=None):
         identifiers = xdom["mods:mods"].get("mods:identifier", [])
         out = out if out is not None else identifier
@@ -109,10 +100,10 @@ def compose_mono_xml(mods_volume_xml):
     mono_root["r:digitalBorn"] = "true"
 
     # parse author
-    mono_root["r:primaryOriginator"] = OrderedDict([
-        ["@type", "AUTHOR"],
-        ["#text", author]
-    ])
+    mono_root["r:primaryOriginator"] = odict[
+        "@type": "AUTHOR",
+        "#text": author
+    ]
 
     # parse publication info
     description = xdom["mods:mods"].get("mods:originInfo", None)
@@ -124,7 +115,7 @@ def compose_mono_xml(mods_volume_xml):
         year = description.get("mods:dateIssued", None)
 
         if any([place, publisher, year]):
-            mono_root["r:publication"] = OrderedDict()
+            mono_root["r:publication"] = odict()
 
         if publisher:
             mono_root["r:publication"]["r:publisher"] = publisher
@@ -134,4 +125,3 @@ def compose_mono_xml(mods_volume_xml):
             mono_root["r:publication"]["r:year"] = year
 
     return xmltodict.unparse(output, pretty=True)
-

@@ -43,6 +43,7 @@ setup(
         "xmltodict",
         "attribute_wrapper",
         "pydhtmlparser>=2.0.9",
+        "odictliteral"
     ],
     extras_require={
         "test": [
