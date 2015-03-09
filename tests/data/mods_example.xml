@@ -1,0 +1,62 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<mods:mods xmlns:mods="http://www.loc.gov/mods/v3"
+           xmlns:xlink="http://www.w3.org/1999/xlink" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"  xsi:schemaLocation="http://www.w3.org/2001/XMLSchema-instance http://www.w3.org/2001/XMLSchema.xsd http://www.loc.gov/mods/v3 http://www.loc.gov/standards/mods/v3/mods-3-4.xsd http://www.w3.org/1999/xlink http://www.w3.org/1999/xlink.xsd"
+    ID="MODS_VOLUME_0001" version="3.4">
+    <mods:titleInfo>
+        <mods:title>Dračí doupě plus</mods:title>
+        <mods:partNumber>1</mods:partNumber>
+        <mods:partName>Bestiář</mods:partName>
+    </mods:titleInfo>
+    <mods:originInfo>
+        <!-- <mods:place><mods:placeTerm authority="marccountry" type="text">xr</mods:placeTerm></mods:place> -->
+        <mods:place>
+            <mods:placeTerm type="text">Ostrava</mods:placeTerm>
+        </mods:place>
+        <mods:publisher>Altar</mods:publisher>
+        <mods:issuance>multipart monograph</mods:issuance>
+        <mods:dateIssued>2012</mods:dateIssued>
+        <mods:edition>Vyd. 1.</mods:edition>
+    </mods:originInfo>
+    <mods:name type="personal" usage="primary">
+        <mods:namePart>Ježek, Matouš</mods:namePart>
+        <mods:namePart type="date">1972-</mods:namePart>
+        <mods:role>
+            <mods:roleTerm authority="marcrelator" type="code">aut</mods:roleTerm>
+        </mods:role>
+    </mods:name>
+    <mods:typeOfResource>text</mods:typeOfResource>
+    <mods:genre>electronic volume</mods:genre>
+    <mods:language>
+        <mods:languageTerm authority="iso639-2b" type="code">cze</mods:languageTerm>
+    </mods:language>
+    <mods:physicalDescription>
+        <mods:form authority="gmd">elektronický zdroj</mods:form>
+        <mods:form authority="marcform">electronic</mods:form>
+        <mods:form authority="marccategory">electronic resource</mods:form>
+        <!-- <mods:form authority="marcsmd">regular print</mods:form> -->
+    </mods:physicalDescription>
+    <mods:location>
+        <mods:holdingSimple>
+            <mods:copyInformation>
+            <!-- <mods:electronicLocator>http://edeposit.nkp.cz</mods:electronicLocator> pole 856 $u -->
+                <mods:electronicLocator>http://edeposit-test.nkp.cz/producents/zizala/epublications/draci-doupe-plus/drdplus-bestiar.pdf</mods:electronicLocator>
+            </mods:copyInformation>
+        </mods:holdingSimple>
+    </mods:location>
+    <!-- <mods:identifier type="urnnbn">urn:nbn:cz:mzk-002s8l</mods:identifier> není vyřešeno přidělování -->
+    <mods:identifier type="uuid">87d27370-db5b-11e3-b110-005054787e51</mods:identifier>
+    <mods:identifier type="ccnb">cnb001852175</mods:identifier>
+    <mods:identifier type="isbn">978-80-85979-67-1</mods:identifier>
+    <mods:recordInfo>
+        <mods:descriptionStandard>aacr</mods:descriptionStandard>
+        <mods:recordContentSource authority="marcorg">OLA001</mods:recordContentSource>
+        <mods:recordCreationDate encoding="iso8601">2009-05-29T00:00:00Z</mods:recordCreationDate>
+        <mods:recordChangeDate encoding="iso8601">2013-07-19T10:15:21Z</mods:recordChangeDate>
+        <mods:recordIdentifier source="CZ-PrNK">nkc20140002762</mods:recordIdentifier>
+        <mods:recordOrigin>machine generated</mods:recordOrigin>
+        <mods:languageOfCataloging>
+            <mods:languageTerm authority="iso639-2b" type="code">cze</mods:languageTerm>
+        </mods:languageOfCataloging>
+    </mods:recordInfo>
+</mods:mods>
