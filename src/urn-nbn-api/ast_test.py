@@ -53,42 +53,30 @@ def xex(asd=1, bsd=2, aaa=3):
     # print el
 
 
-def _disable_nested_calls(args_ast):
+def _disable_nested_calls(func_name, args_ast):
     for arg in args_ast:
         for el in ast.walk(arg):
-            if isinstance(el, ast.Call):
-                raise ValueError("Sorry, nested calls are not supported!")
+            if not isinstance(el, ast.Call):
+                continue
+
+            if not hasattr(el.func, "id"):
+                continue
+
+            if el.func.id == func_name:
+                raise ValueError(
+                    "Sorry, nested calls are not supported!\n"
+                    "All dicts are converted by default."
+                )
 
 
-def _same_args_naive(input_dict, ast_args):
-    if len(ast_args) > 1:
-        return False
-
-    ser = ast.parse(repr(input_dict))
-
-    if ast.dump(ser.body[0].value) == ast.dump(ast_args[0]):
-        return True
-
-    return False
-
-
-def _same_args(input_dict, ast_args):
-    pass
-
-
-def _with_same_args(known_fn, input_dict, list_of_unknown):
-    list_of_unknown = sorted(list_of_unknown, key=lambda x: x.lineno)
-
+def _match_by_lineno(func_name, known_fn, list_of_unknown):
     for candidate in list_of_unknown:
-        _disable_nested_calls(candidate.args)
+        _disable_nested_calls(func_name, candidate.args)
 
-        if _same_args_naive(input_dict, candidate.args):
-            return candidate
+    candidates = filter(lambda x: x.lineno <= known_fn.lineno, list_of_unknown)
 
-        if _same_args(input_dict, candidate.args):
-            return candidate
-
-    return None  # TODO: Remove
+    if candidates:
+        return max(candidates, key=lambda x: x.lineno)
 
     raise ValueError("Couldn't identify matching fuction.")
 
@@ -96,9 +84,14 @@ def _with_same_args(known_fn, input_dict, list_of_unknown):
 # Možná jen resortovat výstupní OrderedDict na základě pořadí klíčů ve vstupním?
 # Nedovolit zanořené cally order()u, tím se eliminuje problém s jeho korektním
 # vyhledáním
+# 
+# Detekce dvou funkcí na jednom řádku
 
 
 def order(input_dict):
+    if not isinstance(input_dict, dict):
+        raise ValueError("`input_dict` have to be instance of `dict`.")
+
     # TODO: this may fuck the 'from import ..' functionality
     frame = inspect.currentframe()
 
@@ -148,20 +141,9 @@ def order(input_dict):
     if not func_calls:
         raise ValueError("Couldn't find the %s call!" % func_name)
 
-    # select proper function call - inspect's frameinfo returns name of last
-    # active function call line, but ast expects first line of the function
-    # call
-    # for el in func_calls:
-    #     print el, el.lineno, el.func.id
-    #     print el.args[0].keys
-    #     # print dir(el)
-    #     print ast.dump(el)
-    #     print
-    print "looking for line", frame_info.lineno, func_name, frame_info.code_context
-    matching_fn = _with_same_args(frame_info, input_dict, func_calls)
-    print "\t", matching_fn
+    matching_fn = _match_by_lineno(func_name, frame_info, func_calls)
 
-    # print matching_fn.lineno, matching_fn.func.id
+    print matching_fn.lineno, matching_fn.func.id
 
 
 def return_xex():
@@ -179,10 +161,10 @@ def whops():
                     "r:title": return_xex(
                     ),
                 },
-                "r:primaryOriginator": order({
+                "r:primaryOriginator": {
                     "@type": "AUTHOR",
-                    "#text": order({"asd":"bsd"})
-                }),
+                    "#text": {"asd":"bsd"}
+                },
             },
         }
     })
