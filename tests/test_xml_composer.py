@@ -44,4 +44,4 @@ def test_mono_xml_conversion(mono_mods_example, mono_out_example):
     out = compose_mono_xml(mono_mods_example).encode("utf-8")
 
     # compare without whitespaces
-    assert mono_out_example.split() == mono_out_example.split()
+    assert out.split() == mono_out_example.split()
