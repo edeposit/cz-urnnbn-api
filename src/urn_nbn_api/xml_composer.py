@@ -4,7 +4,9 @@
 # Interpreter version: python 2.7
 #
 """
-XML specification: http://resolver.nkp.cz/api/v3/digDocRegistration.xsd
+See:
+    - http://resolver.nkp.cz/api/v3/digDocRegistration.xsd
+    - https://code.google.com/p/czidlo/wiki/ApiV3
 """
 # Imports =====================================================================
 
@@ -58,7 +60,6 @@ class MonographPublication(object):
         return title_info.get("mods:partName", None)
 
     def get_form(self):
-        # parse form
         forms = self.dom.match(
             "mods:mods",
             "mods:physicalDescription",
@@ -108,16 +109,29 @@ class MonographPublication(object):
 
         return description.get("mods:dateIssued", None)
 
-    def _add_identifier_to_mono(self, mono_root, identifier, out=None):
-        identifiers = self.xdom["mods:mods"].get("mods:identifier", [])
-        out = out if out is not None else identifier
-
-        tmp = filter(
-            lambda x: x.get("@type", False) == identifier,
-            identifiers
+    def get_identifier(self, name):
+        identifier = filter(
+            lambda x: x.get("@type", False) == name,
+            self.xdom["mods:mods"].get("mods:identifier", [])
         )
-        if tmp:
-            mono_root["r:" + out] = tmp[0]["#text"]
+
+        if not identifier:
+            return
+
+        return identifier[0]["#text"]
+
+    def get_ccnb(self):
+        return self.get_identifier("ccnb")
+
+    def get_isbn(self):
+        return self.get_identifier("isbn")
+
+    def get_uuid(self):
+        return self.get_identifier("uuid")
+
+    def _assign_pattern(self, where, key, what):
+        if what:
+            where[key] = what
 
     def to_xml_dict(self):
         # compose output template
@@ -137,33 +151,39 @@ class MonographPublication(object):
         ]
         mono_root = output["r:import"]["r:monograph"]
 
-        if self.get_part_title():
-            mono_root["r:titleInfo"]["r:subTitle"] = self.get_part_title()
+        self._assign_pattern(
+            mono_root["r:titleInfo"],
+            "r:subTitle",
+            self.get_part_title()
+        )
 
         # handle ccnb, isbn, uuid
-        self._add_identifier_to_mono(mono_root, "ccnb")  # TODO: rewrite to getters
-        self._add_identifier_to_mono(mono_root, "isbn")
-        self._add_identifier_to_mono(mono_root, "uuid", out="otherId")
+        def _add_identifier_to_mono(mono_root, identifier, out=None):
+            out = out if out is not None else identifier
 
-        if self.get_form():
-            mono_root["r:documentType"] = self.get_form()
+            tmp = self.get_identifier(identifier)
+            if tmp:
+                mono_root["r:" + out] = tmp
+
+        _add_identifier_to_mono(mono_root, "ccnb")
+        _add_identifier_to_mono(mono_root, "isbn")
+        _add_identifier_to_mono(mono_root, "uuid", out="otherId")
+
+        # add form of the book
+        self._assign_pattern(mono_root, "r:documentType", self.get_form())
 
         mono_root["r:digitalBorn"] = "true"
 
-        if self._get_description():
-            place = self.get_place()
-            publisher = self.get_publisher()
-            year = self.get_year()
+        if self._get_description() and any([self.get_place(),
+                                            self.get_publisher(),
+                                            self.get_year()]):
+            publication = odict()
 
-            if any([place, publisher, year]):
-                mono_root["r:publication"] = odict()
+            self._assign_pattern(publication, "r:publisher", self.get_place())
+            self._assign_pattern(publication, "r:place", self.get_publisher())
+            self._assign_pattern(publication, "r:year", self.get_year())
 
-            if publisher:
-                mono_root["r:publication"]["r:publisher"] = publisher
-            if place:
-                mono_root["r:publication"]["r:place"] = place
-            if year:
-                mono_root["r:publication"]["r:year"] = year
+            mono_root["r:publication"] = publication
 
         return output
 
@@ -171,16 +191,12 @@ class MonographPublication(object):
         return xmltodict.unparse(self.to_xml_dict(), pretty=True)
 
 
-def compose_mono_xml(mods_volume_xml):
+def compose_mono_xml(mods_xml):
     """
     Convert MODS to XML, which is required by URN:NBN resolver.
 
-    See:
-        - http://resolver.nkp.cz/api/v3/digDocRegistration.xsd
-        - https://code.google.com/p/czidlo/wiki/ApiV3
-
     Args:
-        mods_volume_xml (str): MODS volume XML.
+        mods_xml (str): MODS volume XML.
 
     Returns:
         str: XML for URN:NBN resolver.
@@ -188,7 +204,7 @@ def compose_mono_xml(mods_volume_xml):
     Raises:
         ValueErrro: If can't find required data in MODS (author, title).
     """
-    return MonographPublication(mods_volume_xml).__str__()
+    return MonographPublication(mods_xml).__str__()
 
 
 def compose_periodical_xml(mods_volume_xml):
