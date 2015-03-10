@@ -14,9 +14,6 @@ import xmltodict
 import dhtmlparser
 from odictliteral import odict
 
-# TODO: přepsat na hromadu getterů
-# TODO: @utf8 decorator / nějak pořešit
-
 
 # Functions & classes =========================================================
 class MonographPublication(object):
@@ -25,51 +22,51 @@ class MonographPublication(object):
         self.dom = dhtmlparser.parseString(mods_xml)
         self.xdom = xmltodict.parse(mods_xml)
 
+    def _get_title_info(self):
+        return self.xdom["mods:mods"]["mods:titleInfo"]
+
     def get_title(self):
-        title = self.xdom["mods:mods"]["mods:titleInfo"]["mods:title"]
+        title = self._get_title_info()["mods:title"]
 
         if type(title) in [tuple, list]:
             return title[0]
 
         return title
 
+    def get_subtitle(self):
+        subtitle = self._get_title_info().get("mods:subTitle", None)
+
+        if not subtitle:
+            return None
+
+        if type(subtitle) in [tuple, list]:
+            return subtitle[0]
+
+        return subtitle
+
     def get_author(self):
-        author = self.dom.find(
-            "mods:name",
-            {"type": "personal", "usage": "primary"},
-            fn=lambda x: x.params.get("type", "") != "date"
-        )
-
-        if not author:
-            raise ValueError("Can't find 'author' in given MODS!")
-
-        # filter proper <mods:namePart> tag (one which doesn't contain
-        # type="date" attribute)
-        author = filter(
-            lambda x: x.params.get("type", False) != "date",
-            author[0].find("mods:namePart")
+        author = self.dom.match(
+            "mods:mods",
+            ["mods:name", {"type": "personal", "usage": "primary"}],
+            {
+                "tag_name": "mods:namePart",
+                "fn": lambda x: x.params.get("type", "") != "date"
+            }
         )
         if not author:
             raise ValueError("Can't find namePart for author!")
 
         return author[0].getContent().decode("utf-8")
 
-    def get_part_title(self):
-        title_info = self.xdom["mods:mods"]["mods:titleInfo"]
-
-        return title_info.get("mods:partName", None)
-
     def get_form(self):
         forms = self.dom.match(
             "mods:mods",
             "mods:physicalDescription",
-            "mods:form"
+            {
+                "tag_name": "mods:form",
+                "fn": lambda x: x.params.get("authority", "") == "gmd"
+            }
         )
-        if not forms:
-            return
-
-        forms = filter(lambda x: x.params.get("authority", "") == "gmd", forms)
-
         if not forms:
             return
 
@@ -79,21 +76,15 @@ class MonographPublication(object):
         return self.xdom["mods:mods"].get("mods:originInfo", None)
 
     def get_place(self):
-        description = self._get_description()
-        if not description:
-            return
-
-        place = description.get("mods:place", None)
-
+        place = self.dom.match(
+            "mods:originInfo",
+            "mods:place",
+            ["mods:placeTerm", {"type": "text"}]
+        )
         if not place:
             return
 
-        place = description["mods:place"].get("mods:placeTerm", None)
-
-        if not place:
-            return
-
-        return place["#text"]
+        return place[0].getContent().decode("utf-8")
 
     def get_publisher(self):
         description = self._get_description()
@@ -154,7 +145,7 @@ class MonographPublication(object):
         self._assign_pattern(
             mono_root["r:titleInfo"],
             "r:subTitle",
-            self.get_part_title()
+            self.get_subtitle()
         )
 
         # handle ccnb, isbn, uuid
@@ -177,18 +168,25 @@ class MonographPublication(object):
         if self._get_description() and any([self.get_place(),
                                             self.get_publisher(),
                                             self.get_year()]):
-            publication = odict()
+            publ = odict()
 
-            self._assign_pattern(publication, "r:publisher", self.get_place())
-            self._assign_pattern(publication, "r:place", self.get_publisher())
-            self._assign_pattern(publication, "r:year", self.get_year())
+            self._assign_pattern(publ, "r:publisher", self.get_publisher())
+            self._assign_pattern(publ, "r:place", self.get_place())
+            self._assign_pattern(publ, "r:year", self.get_year())
 
-            mono_root["r:publication"] = publication
+            mono_root["r:publication"] = publ
 
         return output
 
     def __str__(self):
         return xmltodict.unparse(self.to_xml_dict(), pretty=True)
+
+
+class MonographVolume(MonographPublication):
+    def get_part_title(self):
+        title_info = self.xdom["mods:mods"]["mods:titleInfo"]
+
+        return title_info.get("mods:partName", None)
 
 
 def compose_mono_xml(mods_xml):
