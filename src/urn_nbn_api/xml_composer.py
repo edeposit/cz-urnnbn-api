@@ -3,16 +3,26 @@
 #
 # Interpreter version: python 2.7
 #
+"""
+XML specification: http://resolver.nkp.cz/api/v3/digDocRegistration.xsd
+"""
 # Imports =====================================================================
 
 import xmltodict
 import dhtmlparser
 from odictliteral import odict
 
-# http://www.freeformatter.com/xml-validator-xsd.html
+# TODO: přepsat na hromadu getterů
 
-# Variables ===================================================================
+
 # Functions & classes =========================================================
+class MonographPublication(object):
+    def __init__(self, mods_xml):
+        self.mods_xml = mods_xml
+        self.dom = dhtmlparser.parseString(mods_xml)
+        self.xdom = xmltodict.parse(mods_xml)
+
+
 def compose_mono_xml(mods_volume_xml):
     """
     Convert MODS to XML, which is required by URN:NBN resolver.
@@ -125,3 +135,7 @@ def compose_mono_xml(mods_volume_xml):
             mono_root["r:publication"]["r:year"] = year
 
     return xmltodict.unparse(output, pretty=True)
+
+
+def compose_periodical_xml(mods_volume_xml):
+    pass
