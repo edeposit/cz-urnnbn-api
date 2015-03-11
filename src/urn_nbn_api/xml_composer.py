@@ -87,18 +87,16 @@ class MonographPublication(object):
         return place[0].getContent().decode("utf-8")
 
     def get_publisher(self):
-        description = self._get_description()
-        if not description:
+        if not self._get_description():
             return
 
-        return description.get("mods:publisher", None)
+        return self._get_description().get("mods:publisher", None)
 
     def get_year(self):
-        description = self._get_description()
-        if not description:
+        if not self._get_description():
             return
 
-        return description.get("mods:dateIssued", None)
+        return self._get_description().get("mods:dateIssued", None)
 
     def get_identifier(self, name):
         identifier = filter(
@@ -124,6 +122,13 @@ class MonographPublication(object):
         if what:
             where[key] = what
 
+    def _add_identifier_to_mono(self, mono_root, identifier, out=None):
+        out = out if out is not None else identifier
+
+        tmp = self.get_identifier(identifier)
+        if tmp:
+            mono_root["r:" + out] = tmp
+
     def to_xml_dict(self):
         # compose output template
         output = odict[
@@ -132,10 +137,6 @@ class MonographPublication(object):
                 "r:monograph": odict[
                     "r:titleInfo": odict[
                         "r:title": self.get_title(),
-                    ],
-                    "r:primaryOriginator": odict[
-                        "@type": "AUTHOR",
-                        "#text": self.get_author()
                     ],
                 ],
             ]
@@ -149,21 +150,20 @@ class MonographPublication(object):
         )
 
         # handle ccnb, isbn, uuid
-        def _add_identifier_to_mono(mono_root, identifier, out=None):
-            out = out if out is not None else identifier
-
-            tmp = self.get_identifier(identifier)
-            if tmp:
-                mono_root["r:" + out] = tmp
-
-        _add_identifier_to_mono(mono_root, "ccnb")
-        _add_identifier_to_mono(mono_root, "isbn")
-        _add_identifier_to_mono(mono_root, "uuid", out="otherId")
+        self._add_identifier_to_mono(mono_root, "ccnb")
+        self._add_identifier_to_mono(mono_root, "isbn")
+        self._add_identifier_to_mono(mono_root, "uuid", out="otherId")
 
         # add form of the book
         self._assign_pattern(mono_root, "r:documentType", self.get_form())
 
         mono_root["r:digitalBorn"] = "true"
+
+        if self.get_author():
+            mono_root["r:primaryOriginator"] = odict[
+                "@type": "AUTHOR",
+                "#text": self.get_author()
+            ]
 
         if self._get_description() and any([self.get_place(),
                                             self.get_publisher(),
@@ -183,15 +183,73 @@ class MonographPublication(object):
 
 
 class MonographVolume(MonographPublication):
-    def get_part_title(self):
-        title_info = self.xdom["mods:mods"]["mods:titleInfo"]
+    def get_volume_title(self):
+        title_info = self.dom.match(
+            "mods:mods",
+            "mods:titleInfo",
+            "mods:partNumber"
+        )
 
-        return title_info.get("mods:partName", None)
+        if not title_info:
+            title_info = self.dom.match(
+                "mods:mods",
+                "mods:titleInfo",
+                "mods:partName"
+            )
 
+        if not title_info:
+            raise ValueError("Can't find volumeTitle!")
+
+        return title_info[0].getContent().decode("utf-8")
+
+    def to_xml_dict(self):
+        # compose output template
+        output = odict[
+            "r:import": odict[
+                "@xmlns:r": "http://resolver.nkp.cz/v3/",
+                "r:monographVolume": odict[
+                    "r:titleInfo": odict[
+                        "r:monographTitle": self.get_title(),
+                        "r:volumeTitle": self.get_volume_title(),
+                    ],
+                ],
+            ]
+        ]
+        mono_root = output["r:import"]["r:monographVolume"]
+
+        # handle ccnb, isbn, uuid
+        self._add_identifier_to_mono(mono_root, "ccnb")
+        self._add_identifier_to_mono(mono_root, "isbn")
+        self._add_identifier_to_mono(mono_root, "uuid", out="otherId")
+
+        # add form of the book
+        self._assign_pattern(mono_root, "r:documentType", self.get_form())
+
+        mono_root["r:digitalBorn"] = "true"
+
+        if self.get_author():
+            mono_root["r:primaryOriginator"] = odict[
+                "@type": "AUTHOR",
+                "#text": self.get_author()
+            ]
+
+        if self._get_description() and any([self.get_place(),
+                                            self.get_publisher(),
+                                            self.get_year()]):
+            publ = odict()
+
+            self._assign_pattern(publ, "r:publisher", self.get_publisher())
+            self._assign_pattern(publ, "r:place", self.get_place())
+            self._assign_pattern(publ, "r:year", self.get_year())
+
+            mono_root["r:publication"] = publ
+
+        return output
 
 def compose_mono_xml(mods_xml):
     """
-    Convert MODS to XML, which is required by URN:NBN resolver.
+    Convert MODS monograph record to XML, which is required by URN:NBN
+    resolver.
 
     Args:
         mods_xml (str): MODS volume XML.
@@ -205,5 +263,18 @@ def compose_mono_xml(mods_xml):
     return MonographPublication(mods_xml).__str__()
 
 
-def compose_periodical_xml(mods_volume_xml):
-    pass
+def compose_mono_volume_xml(mods_volume_xml):
+    """
+    Convert MODS monograph, multi-volume record to XML, which is required by
+    URN:NBN resolver.
+
+    Args:
+        mods_volume_xml (str): MODS volume XML.
+
+    Returns:
+        str: XML for URN:NBN resolver.
+
+    Raises:
+        ValueErrro: If can't find required data in MODS (author, title).
+    """
+    return MonographVolume(mods_volume_xml).__str__()
