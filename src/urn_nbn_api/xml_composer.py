@@ -4,6 +4,9 @@
 # Interpreter version: python 2.7
 #
 """
+This module contains convertors for converting MODS to XML required by URN:NBN
+project.
+
 See:
     - http://resolver.nkp.cz/api/v3/digDocRegistration.xsd
     - https://code.google.com/p/czidlo/wiki/ApiV3
@@ -53,6 +56,16 @@ class MonographPublication(object):
                 "fn": lambda x: x.params.get("type", "") != "date"
             }
         )
+        if not author:
+            author = self.dom.match(
+                "mods:mods",
+                ["mods:name", {"type": "corporate"}]
+            )
+        if not author:
+            author = self.dom.match(
+                "mods:mods",
+                ["mods:name", {"type": 'conference'}]
+            )
         if not author:
             raise ValueError("Can't find namePart for author!")
 
@@ -245,6 +258,7 @@ class MonographVolume(MonographPublication):
             mono_root["r:publication"] = publ
 
         return output
+
 
 def compose_mono_xml(mods_xml):
     """
