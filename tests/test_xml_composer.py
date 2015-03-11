@@ -12,6 +12,7 @@ import pytest
 sys.path.insert(0, "src")
 import urn_nbn_api
 from urn_nbn_api.xml_composer import compose_mono_xml
+from urn_nbn_api.xml_composer import compose_mono_volume_xml
 
 
 # Variables ===================================================================
@@ -39,9 +40,21 @@ def mono_out_example():
     return data_context("mono_output.xml")
 
 
+@pytest.fixture
+def mono_vol_out_example():
+    return data_context("mono_volume_output.xml")
+
+
 # Tests =======================================================================
 def test_mono_xml_conversion(mono_mods_example, mono_out_example):
     out = compose_mono_xml(mono_mods_example).encode("utf-8")
 
     # compare without whitespaces
     assert out.split() == mono_out_example.split()
+
+
+def test_mono_volume_xml_conversion(mono_mods_example, mono_vol_out_example):
+    out = compose_mono_volume_xml(mono_mods_example).encode("utf-8")
+
+    # compare without whitespaces
+    assert out.split() == mono_vol_out_example.split()
