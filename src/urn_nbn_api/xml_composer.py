@@ -272,7 +272,7 @@ def compose_mono_xml(mods_xml):
         str: XML for URN:NBN resolver.
 
     Raises:
-        ValueErrro: If can't find required data in MODS (author, title).
+        ValueError: If can't find required data in MODS (author, title).
     """
     return MonographPublication(mods_xml).__str__()
 
@@ -289,6 +289,6 @@ def compose_mono_volume_xml(mods_volume_xml):
         str: XML for URN:NBN resolver.
 
     Raises:
-        ValueErrro: If can't find required data in MODS (author, title).
+        ValueError: If can't find required data in MODS (author, title).
     """
     return MonographVolume(mods_volume_xml).__str__()
