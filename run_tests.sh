@@ -1,5 +1,5 @@
 #! /usr/bin/env bash
 #
-export PYTHONPATH="$PYTHONPATH:src"
+export PYTHONPATH="src:$PYTHONPATH"
 
-py.test tests 
+py.test tests $@
