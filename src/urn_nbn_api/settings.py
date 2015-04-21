@@ -36,6 +36,9 @@ USERNAME = ""
 #: Password for the URN:NBN resolver website
 PASSWORD = ""
 
+#: Registration code (used in API)
+REG_CODE = "edep"
+
 #: URL of the URN:NBN resolver
 URL = "https://resolver-test.nkp.cz/api/v3/"
 
