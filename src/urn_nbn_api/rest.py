@@ -4,16 +4,16 @@
 # Interpreter version: python 2.7
 #
 # Imports =====================================================================
+from urlparse import urljoin
+
 import attribute_wrapper
 import requests
 import json
 
+import settings
+
 
 # Variables ===================================================================
-
-
-
-# Functions & classes =========================================================
 class HTTPWrapper(attribute_wrapper.GenericWrapper):
     """
     Example of :class:`GenericWrapper`, which translates all calls and given
@@ -28,9 +28,24 @@ class HTTPWrapper(attribute_wrapper.GenericWrapper):
         return resp.text
 
 
-# Main program ================================================================
-if __name__ == '__main__':
-    w = HTTPWrapper("https://resolver.nkp.cz/api/v3")
+BASE_URL = "https://resolver-test.nkp.cz/api/v3/registrars"
+REST_CLIENT = HTTPWrapper("%s/%s" % (BASE_URL, settings.REG_CODE))
 
-    import code
-    code.interact(None, None, locals())
+
+# Functions & classes =========================================================
+def valid_reg_code(reg_code=settings.REG_CODE):
+    """
+    Returns True, if the registration code defined in :attr:`settings.REG_CODE`
+    is valid registration code.
+    """
+    reg_url = urljoin(settings.URL, "registrars/")
+    try:
+        HTTPWrapper(urljoin(reg_url, reg_code)).get()
+    except requests.exceptions.HTTPError:
+        return False
+
+    return True
+
+
+def register(xml):
+    return REST_CLIENT.digitalDocuments.post(data=xml)
