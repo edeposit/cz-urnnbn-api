@@ -17,19 +17,18 @@ from urn_nbn_api.xml_composer import compose_mono_volume_xml
 
 # Variables ===================================================================
 # Functions & classes =========================================================
+def get_data_path():
+    wd = os.path.dirname(__file__)
+    return os.path.join(wd, "data")
+
+
 def data_context(fn):
-    path = os.path.join(data_path(), fn)
+    path = os.path.join(get_data_path(), fn)
     with open(path) as f:
         return f.read()
 
 
 # Fixtures ====================================================================
-@pytest.fixture
-def data_path():
-    wd = os.path.dirname(__file__)
-    return os.path.join(wd, "data")
-
-
 @pytest.fixture
 def mono_mods_example():
     return data_context("mods_mono.xml")
