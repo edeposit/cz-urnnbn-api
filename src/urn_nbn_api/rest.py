@@ -6,7 +6,6 @@
 # Imports =====================================================================
 from urlparse import urljoin
 
-import attribute_wrapper  # TODO: Remove
 import requests
 import dhtmlparser
 
@@ -14,27 +13,6 @@ import settings
 
 
 # Variables ===================================================================
-class HTTPWrapper(attribute_wrapper.GenericWrapper):
-    """
-    Example of :class:`GenericWrapper`, which translates all calls and given
-    data to HTTP form parameters.
-    """
-    def download_handler(self, method, url, data):
-        resp = requests.request(
-            method,
-            url,
-            data=data,
-            verify=False,
-            headers={'Content-type': 'application/xml'},
-            auth=(settings.USERNAME, settings.PASSWORD)
-        )
-
-        # handle http errors
-        resp.raise_for_status()
-
-        return resp.text
-
-
 def _get_content_or_str(tag):
     if not tag:
         return ""

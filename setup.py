@@ -41,9 +41,8 @@ setup(
     install_requires=[
         'setuptools',
         "xmltodict",
-        "attribute_wrapper",
         "pydhtmlparser>=2.0.9",
-        "odictliteral"
+        "odictliteral",
     ],
     extras_require={
         "test": [
