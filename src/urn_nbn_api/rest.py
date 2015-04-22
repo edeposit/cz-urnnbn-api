@@ -6,9 +6,9 @@
 # Imports =====================================================================
 from urlparse import urljoin
 
-import attribute_wrapper
+import attribute_wrapper  # TODO: Remove
 import requests
-import json
+import dhtmlparser
 
 import settings
 
@@ -20,7 +20,14 @@ class HTTPWrapper(attribute_wrapper.GenericWrapper):
     data to HTTP form parameters.
     """
     def download_handler(self, method, url, data):
-        resp = requests.request(method, url, params=data, verify=False)
+        resp = requests.request(
+            method,
+            url,
+            data=data,
+            verify=False,
+            headers={'Content-type': 'application/xml'},
+            auth=(settings.USERNAME, settings.PASSWORD)
+        )
 
         # handle http errors
         resp.raise_for_status()
@@ -28,24 +35,68 @@ class HTTPWrapper(attribute_wrapper.GenericWrapper):
         return resp.text
 
 
-BASE_URL = "https://resolver-test.nkp.cz/api/v3/registrars"
-REST_CLIENT = HTTPWrapper("%s/%s" % (BASE_URL, settings.REG_CODE))
+def _get_content_or_str(tag):
+    if not tag:
+        return ""
+
+    if isinstance(tag, list) or isinstance(tag, tuple):
+        tag = tag[0]
+
+    return tag.getContent()
+
+
+def send_request(method, url, data=None, params=None):
+    resp = requests.request(
+        method,
+        url,
+        data=data,
+        params=params,
+        verify=False,  # TODO: remove?
+        headers={'Content-type': 'application/xml'},
+        auth=(settings.USERNAME, settings.PASSWORD)
+    )
+
+    # handle http errors
+    try:
+        if resp.status_code not in [200, 400]:
+            resp.raise_for_status()
+    except requests.HTTPError, e:
+        raise requests.HTTPError(e.message + "\n" + resp.content)
+
+    # handle API errors
+    dom = dhtmlparser.parseString(resp.content)
+    if dom.find("error"):
+        errors = [
+            _get_content_or_str(error.find("code")) + " " +
+            _get_content_or_str(error.find("message"))
+            for error in dom.find("error")
+        ]
+
+        raise ValueError("\n".join(errors))
+
+    return resp.text
 
 
 # Functions & classes =========================================================
-def valid_reg_code(reg_code=settings.REG_CODE):
+def is_valid_reg_code(reg_code=settings.REG_CODE):
     """
     Returns True, if the registration code defined in :attr:`settings.REG_CODE`
     is valid registration code.
     """
-    reg_url = urljoin(settings.URL, "registrars/")
     try:
-        HTTPWrapper(urljoin(reg_url, reg_code)).get()
-    except requests.exceptions.HTTPError:
+        return send_request(
+            method="GET",
+            url=urljoin(settings.REG_URL, reg_code),
+        )
+    except (requests.exceptions.HTTPError, ValueError):
         return False
 
     return True
 
 
-def register(xml):
-    return REST_CLIENT.digitalDocuments.post(data=xml)
+def register(xml, reg_code=settings.REG_CODE):
+    return send_request(
+        method="POST",
+        url=urljoin(settings.URL, "registrars/%s/digitalDocuments") % reg_code,
+        data=xml
+    )
