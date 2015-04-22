@@ -25,6 +25,7 @@ Attributes
 import json
 import os
 import os.path
+from urlparse import urljoin
 
 
 # Module configuration ========================================================
@@ -41,6 +42,9 @@ REG_CODE = "edep"
 
 #: URL of the URN:NBN resolver
 URL = "https://resolver-test.nkp.cz/api/v3/"
+
+#: 
+REG_URL = urljoin(URL, "registrars/")
 
 
 # User configuration reader (don't edit this ==================================
