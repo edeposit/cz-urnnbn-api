@@ -12,7 +12,6 @@ See:
     - https://code.google.com/p/czidlo/wiki/ApiV3
 """
 # Imports =====================================================================
-
 import xmltodict
 import dhtmlparser
 from odictliteral import odict
