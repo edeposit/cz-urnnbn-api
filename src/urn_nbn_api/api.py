@@ -7,12 +7,15 @@
 from urlparse import urljoin
 
 import requests
+import xmltodict
 import dhtmlparser
 
 import settings
 
+from api_structures.registrar import Registrar
 
-# Variables ===================================================================
+
+# Functions & classes =========================================================
 def _get_content_or_str(tag):
     if not tag:
         return ""
@@ -23,7 +26,7 @@ def _get_content_or_str(tag):
     return tag.getContent()
 
 
-def send_request(method, url, data=None, params=None):
+def _send_request(method, url, data=None, params=None):
     resp = requests.request(
         method,
         url,
@@ -55,14 +58,19 @@ def send_request(method, url, data=None, params=None):
     return resp.text
 
 
-# Functions & classes =========================================================
+# API =========================================================================
 def is_valid_reg_code(reg_code=settings.REG_CODE):
     """
-    Returns True, if the registration code defined in :attr:`settings.REG_CODE`
-    is valid registration code.
+    Check whether `reg_code` is valid registration code.
+
+    Args:
+        reg_code (str): Producent's registration code.
+
+    Returns:
+        bool: True, if the `reg_code` is valid.
     """
     try:
-        return send_request(
+        return _send_request(
             method="GET",
             url=urljoin(settings.REG_URL, reg_code),
         )
@@ -72,9 +80,45 @@ def is_valid_reg_code(reg_code=settings.REG_CODE):
     return True
 
 
-def register(xml, reg_code=settings.REG_CODE):
-    return send_request(
+def get_list_of_registrars():
+    data = _send_request(
+        method="GET",
+        url=urljoin(settings.URL, "registrars")
+    )
+
+    xdom = xmltodict.parse(data)
+
+    for registrar_tag in xdom["response"]["registrars"]["registrar"]:
+        print registrar_tag
+        print registrar_tag["@code"]
+        print registrar_tag["@id"]
+        print registrar_tag["name"]
+        print registrar_tag.get("description", None)
+        print registrar_tag["created"]
+        print registrar_tag.get("modified", None)
+
+        print registrar_tag["registrationModes"]["@name=BY_RESOLVER"]
+        print registrar_tag["registrationModes"]["@name=BY_REGISTRAR"]
+        print registrar_tag["registrationModes"]["@name=BY_RESERVATION"]
+        print
+
+
+
+def get_registrator_info(reg_code):
+    pass
+
+
+def register_document(xml, reg_code=settings.REG_CODE):
+    return _send_request(
         method="POST",
         url=urljoin(settings.URL, "registrars/%s/digitalDocuments") % reg_code,
         data=xml
     )
+
+    # TODO: parsování vrácených dat, vrácení URN:NBN kódu
+
+
+
+# TODO: kód na přehled ohlášených epublikací
+
+print get_list_of_registrars()
