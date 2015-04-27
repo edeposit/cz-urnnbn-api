@@ -12,6 +12,7 @@ import dhtmlparser
 
 import settings
 
+from api_structures.registrar import Modes
 from api_structures.registrar import Registrar
 
 
@@ -80,7 +81,23 @@ def is_valid_reg_code(reg_code=settings.REG_CODE):
     return True
 
 
-def get_list_of_registrars():
+def _by_attr(xdom, attr):
+    out = []
+
+    for tag in xdom:
+        for attr_name, val in attr.iteritems():
+            if attr_name not in tag:
+                break
+
+            if val is not None and tag[attr_name] != val:
+                break
+
+            out.append(tag)
+
+    return out if len(out) != 1 else out[0]
+
+
+def get_registrars():
     data = _send_request(
         method="GET",
         url=urljoin(settings.URL, "registrars")
@@ -89,18 +106,29 @@ def get_list_of_registrars():
     xdom = xmltodict.parse(data)
 
     for registrar_tag in xdom["response"]["registrars"]["registrar"]:
-        print registrar_tag
-        print registrar_tag["@code"]
-        print registrar_tag["@id"]
-        print registrar_tag["name"]
-        print registrar_tag.get("description", None)
-        print registrar_tag["created"]
-        print registrar_tag.get("modified", None)
+        # parse modes
+        modes_tag = registrar_tag["registrationModes"]["mode"]
 
-        print registrar_tag["registrationModes"]["@name=BY_RESOLVER"]
-        print registrar_tag["registrationModes"]["@name=BY_REGISTRAR"]
-        print registrar_tag["registrationModes"]["@name=BY_RESERVATION"]
-        print
+        by_resolver = _by_attr(modes_tag, attr={"@name": "BY_RESOLVER"})
+        by_registrar = _by_attr(modes_tag, attr={"@name": "BY_REGISTRAR"})
+        by_reservation = _by_attr(modes_tag, attr={"@name": "BY_RESERVATION"})
+
+        modes = Modes(
+            by_resolver=by_resolver["@enabled"],
+            by_registrar=by_registrar["@enabled"],
+            by_reservation=by_reservation["@enabled"],
+        )
+
+        # parse Registrar data
+        yield Registrar(
+            code=registrar_tag["@code"],
+            uid=registrar_tag["@id"],
+            name=registrar_tag["name"],
+            description=registrar_tag.get("description", None),
+            created=registrar_tag["created"],
+            modified=registrar_tag.get("modified", None),
+            modes=modes
+        )
 
 
 
@@ -121,4 +149,4 @@ def register_document(xml, reg_code=settings.REG_CODE):
 
 # TODO: kód na přehled ohlášených epublikací
 
-print get_list_of_registrars()
+print get_registrars()
