@@ -31,6 +31,23 @@ class DigitalLibrary(object):
         # </digitalLibrary>
 
 
+class Catalog(object):
+    def __init__(self, uid, name, url_prefix, created):
+        self.uid = uid
+        self.name = name
+        self.created = created
+        self.url_prefix = url_prefix
+
+
+        # <catalogs>
+        #     <catalog id="2">
+        #         <name>Aleph MZK</name>
+        #         <urlPrefix>http://aleph.mzk.cz</urlPrefix>
+        #         <created>2012-04-11T11:15:38.525+02:00</created>
+        #     </catalog>
+        # </catalogs>
+
+
 class Registrar(object):
     def __init__(self, code, uid, name=None, description=None, created=None,
                  modified=None, modes=None):
@@ -42,6 +59,7 @@ class Registrar(object):
         self.description = description
 
         self.modes = modes if modes else Modes()
+        self.catalogs = []
         self.digital_libraries = []
 
     def __repr__(self):
