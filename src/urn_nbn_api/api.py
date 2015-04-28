@@ -13,6 +13,7 @@ import dhtmlparser
 import settings
 
 from api_structures.registrar import Modes
+from api_structures.registrar import Catalog
 from api_structures.registrar import Registrar
 from api_structures.registrar import DigitalLibrary
 
@@ -136,6 +137,13 @@ def iter_registrars():
         yield _parse_registrar(registrar_tag)
 
 
+def to_list(tag):
+    if isinstance(tag, tuple) or isinstance(tag, list):
+        return tag
+
+    return [tag]
+
+
 def get_registrar_info(reg_code):
     data = _send_request(
         method="GET",
@@ -147,10 +155,11 @@ def get_registrar_info(reg_code):
 
     registrar = _parse_registrar(reg_tag)
 
-    if not reg_tag.get("digitalLibraries", []):
+    if not reg_tag.get("digitalLibraries", None):
         return registrar
 
-    for dl_tag in reg_tag["digitalLibraries"]["digitalLibrary"]:
+    # parse digital_libraries
+    for dl_tag in to_list(reg_tag["digitalLibraries"]["digitalLibrary"]):
         registrar.digital_libraries.append(
             DigitalLibrary(
                 uid=dl_tag["@id"],
@@ -158,6 +167,20 @@ def get_registrar_info(reg_code):
                 description=dl_tag.get("description", None),
                 url=dl_tag.get("url", None),
                 created=dl_tag.get("created", None),
+            )
+        )
+
+    if not reg_tag.get("catalogs", None):
+        return registrar
+
+    # parse catalogs
+    for catalog_tag in to_list(reg_tag["catalogs"]["catalog"]):
+        registrar.catalogs.append(
+            Catalog(
+                uid=catalog_tag["@id"],
+                name=catalog_tag["name"],
+                url_prefix=catalog_tag.get("urlPrefix", None),
+                created=catalog_tag.get("created", None),
             )
         )
 
