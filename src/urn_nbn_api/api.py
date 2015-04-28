@@ -137,7 +137,7 @@ def iter_registrars():
         yield _parse_registrar(registrar_tag)
 
 
-def to_list(tag):
+def _to_list(tag):
     if isinstance(tag, tuple) or isinstance(tag, list):
         return tag
 
@@ -159,7 +159,7 @@ def get_registrar_info(reg_code):
         return registrar
 
     # parse digital_libraries
-    for dl_tag in to_list(reg_tag["digitalLibraries"]["digitalLibrary"]):
+    for dl_tag in _to_list(reg_tag["digitalLibraries"]["digitalLibrary"]):
         registrar.digital_libraries.append(
             DigitalLibrary(
                 uid=dl_tag["@id"],
@@ -174,7 +174,7 @@ def get_registrar_info(reg_code):
         return registrar
 
     # parse catalogs
-    for catalog_tag in to_list(reg_tag["catalogs"]["catalog"]):
+    for catalog_tag in _to_list(reg_tag["catalogs"]["catalog"]):
         registrar.catalogs.append(
             Catalog(
                 uid=catalog_tag["@id"],
