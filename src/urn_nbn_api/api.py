@@ -19,17 +19,23 @@ from api_structures.registrar import DigitalLibrary
 
 
 # Functions & classes =========================================================
-def _get_content_or_str(tag):
-    if not tag:
-        return ""
-
-    if isinstance(tag, list) or isinstance(tag, tuple):
-        tag = tag[0]
-
-    return tag.getContent()
-
-
 def _send_request(method, url, data=None, params=None):
+    """
+    Send request with data to server.
+
+    Args:
+        method (str): HTTP method - GET/POST/..
+        url (str): URL of the resource where you wish to send request.
+        data (dict, default None): This will be sent in body of the request.
+        params (dict, default None): This may be sent as parameters.
+
+    Raises:
+        ValueError: In case that ``<error>`` tag was detected in output.
+        requests.HTTPError: In case of HTTP error.
+
+    Returns:
+        str: Data returned from server.
+    """
     resp = requests.request(
         method,
         url,
@@ -61,7 +67,44 @@ def _send_request(method, url, data=None, params=None):
     return resp.text
 
 
+def _get_content_or_str(tag, alt="", pick=lambda x: x[0]):
+    """
+    Get content of the `tag`, or return alternative defined by `alt`.
+
+    In case that tag is instance of ``list`` or ``tuple``, `pick` function is
+    applied.
+
+    Args:
+        tag (HTMLElement/list): Instance of HTMLElement or list.
+        alt (obj, default ""): Alternative value for tag ``if not tag``.
+        pick (fn, default lambda): Pick item from list of `tag`. Default lambda
+             that picks first item.
+
+    Return:
+        str: Content of `tag`.
+    """
+    if not tag:
+        return alt
+
+    if isinstance(tag, list) or isinstance(tag, tuple):
+        tag = pick(tag)
+
+    return tag.getContent()
+
+
 def _by_attr(xdom, attr):
+    """
+    From `xdom` pick element with attributes defined by `attr`.
+
+    Args:
+        xdom (obj): DOM parsed by :mod:`xmltodict`.
+        attr (dict): Dictionary defining all the arguments.
+
+    Returns:
+        obj: List in case that multiple records were returned, or OrderedDict \
+             instance in case that there was only one. Blank array in case of \
+             no matching tag.
+    """
     out = []
 
     for tag in xdom:
@@ -100,6 +143,15 @@ def is_valid_reg_code(reg_code=settings.REG_CODE):
 
 
 def _parse_registrar(reg_tag):
+    """
+    Parse basic information about registrar.
+
+    Args:
+        reg_tag (obj): OrderedDict returned from :mod:`xmltodict`.
+
+    Returns:
+        obj: :class:`.Registrar` instance with basic informations.
+    """
     # parse modes
     modes_tag = reg_tag["registrationModes"]["mode"]
 
