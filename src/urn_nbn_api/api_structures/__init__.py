@@ -4,17 +4,8 @@
 # Interpreter version: python 2.7
 #
 # Imports =====================================================================
-
-
-
-# Variables ===================================================================
-
-
-
-# Functions & classes =========================================================
-
-
-
-# Main program ================================================================
-if __name__ == '__main__':
-    pass
+from modes import Modes
+from catalog import Catalog
+from urn_nbn import URN_NBN
+from registrar import Registrar
+from digital_library import DigitalLibrary

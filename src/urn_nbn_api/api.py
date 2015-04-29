@@ -12,11 +12,11 @@ import dhtmlparser
 
 import settings
 
-from api_structures.registrar import Modes
-from api_structures.registrar import Catalog
-from api_structures.registrar import Registrar
-from api_structures.registrar import DigitalLibrary
-from api_structures.urn_nbn import URN_NBN
+from api_structures import Modes
+from api_structures import Catalog
+from api_structures import URN_NBN
+from api_structures import Registrar
+from api_structures import DigitalLibrary
 
 
 # Functions & classes =========================================================
