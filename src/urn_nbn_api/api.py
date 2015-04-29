@@ -126,6 +126,12 @@ def _parse_registrar(reg_tag):
 
 
 def iter_registrars():
+    """
+    Iterate thru all registrars.
+
+    Yields:
+        obj: :class:`.Registrar` instance with basic informations.
+    """
     data = _send_request(
         method="GET",
         url=urljoin(settings.URL, "registrars")
@@ -138,6 +144,15 @@ def iter_registrars():
 
 
 def _to_list(tag):
+    """
+    Put `tag` to list if it ain't list/tuple already.
+
+    Args:
+        tag (obj): Anything.
+
+    Returns:
+        list: Tag.
+    """
     if isinstance(tag, tuple) or isinstance(tag, list):
         return tag
 
@@ -145,6 +160,15 @@ def _to_list(tag):
 
 
 def get_registrar_info(reg_code):
+    """
+    Get detailed informations about registrar with `reg_code`.
+
+    Args:
+        reg_code (str): Code identifier of registrar.
+
+    Returns:
+        obj: :class:`.Registrar` instance with all informations.
+    """
     data = _send_request(
         method="GET",
         url=urljoin(settings.REG_URL, reg_code)
