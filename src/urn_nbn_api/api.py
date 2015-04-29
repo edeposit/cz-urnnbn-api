@@ -265,6 +265,20 @@ def get_registrar_info(reg_code):
 
 
 def register_document(xml, reg_code=settings.REG_CODE):
+    """
+    Register document in mode ``BY_RESOLVER`` - let the resolver give you
+    URN:NBN code.
+
+    Args:
+        xml (str): XML, which will be used for registration. See
+                   :mod:`xml_composer` for details.
+
+        reg_code (str, default settings.REG_CODE): Registrar's code.
+
+    Returns:
+        obj: Instance of :class:`.URN_NBN` which contains assinged URN:NBN \
+             code.
+    """
     result = _send_request(
         method="POST",
         url=urljoin(settings.URL, "registrars/%s/digitalDocuments") % reg_code,
