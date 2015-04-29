@@ -16,6 +16,7 @@ from api_structures.registrar import Modes
 from api_structures.registrar import Catalog
 from api_structures.registrar import Registrar
 from api_structures.registrar import DigitalLibrary
+from api_structures.urn_nbn import URN_NBN
 
 
 # Functions & classes =========================================================
@@ -264,17 +265,21 @@ def get_registrar_info(reg_code):
 
 
 def register_document(xml, reg_code=settings.REG_CODE):
-    return _send_request(
+    result = _send_request(
         method="POST",
         url=urljoin(settings.URL, "registrars/%s/digitalDocuments") % reg_code,
         data=xml
     )
 
-    # TODO: parsování vrácených dat, vrácení URN:NBN kódu
+    xdom = xmltodict.parse(result)
+    urn_nbn_tag = xdom["response"]["urnNbn"]
 
-
-
-# TODO: kód na přehled ohlášených epublikací
-
-print get_registrar_info("boa001")
-print get_registrar_info("boa001").digital_libraries
+    return URN_NBN(
+        value=urn_nbn_tag["value"],
+        status=urn_nbn_tag["status"],
+        registered=urn_nbn_tag.get("registered", None),
+        country_code=urn_nbn_tag.get("countryCode", None),
+        document_code=urn_nbn_tag.get("documentCode", None),
+        registrar_code=urn_nbn_tag.get("registrarCode", None),
+        digital_document_id=urn_nbn_tag.get("digitalDocumentId", None),
+    )
