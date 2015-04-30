@@ -26,6 +26,11 @@ def registrar_data():
     return data_context("registrar_data.xml")
 
 
+@pytest.fixture
+def registration_response():
+    return data_context("registration_response.xml")
+
+
 # Tests =======================================================================
 def test_is_valid_reg_code():
     assert api.is_valid_reg_code()
@@ -151,30 +156,21 @@ def test_get_registrar_info(monkeypatch, registrar_data):
         url_prefix="http://aleph.mzk.cz"
     )
 
-# def test_register(mono_out_example):
-#     mono_out_example = """<?xml version="1.0" encoding="UTF-8"?>
-# <r:import xmlns:r="http://resolver.nkp.cz/v3/">
-#     <r:monograph>
-#         <r:titleInfo>
-#             <r:title>Babička</r:title>
-#             <r:subTitle>Obrazy z venkovského života</r:subTitle>
-#         </r:titleInfo>
-#         <r:ccnb>cnb002251177</r:ccnb>
-#         <r:isbn>8090119964</r:isbn>
-#         <r:otherId>DOI:TODO</r:otherId>
-#         <r:documentType>kniha</r:documentType>
-#         <r:digitalBorn>false</r:digitalBorn>
-#         <r:primaryOriginator type="AUTHOR">Božena Němcová</r:primaryOriginator>
-#         <r:otherOriginator>Adolf Kašpar</r:otherOriginator>
-#         <r:publication>
-#             <r:publisher>Československý spisovatel</r:publisher>
-#             <r:place>V Praze</r:place>
-#             <r:year>2011</r:year>
-#         </r:publication>
-#     </r:monograph>
-#     <r:digitalDocument>
-#         <r:archiverId>3</r:archiverId>
-#     </r:digitalDocument>
-# </r:import>
-# """
-#     print rest.register(mono_out_example)
+
+def test_register_document(monkeypatch, registration_response):
+    def send_request(*args, **kwargs):
+        return registration_response
+
+    monkeypatch.setattr(api, "_send_request", send_request)
+
+    response = api.register_document("something")
+
+    assert response == "urn:nbn:cz:edep-00000j"
+
+    assert response.value == "urn:nbn:cz:edep-00000j"
+    assert response.status == "ACTIVE"
+    assert response.registered == "2015-04-29T17:43:48.399+02:00"
+    assert response.country_code == "cz"
+    assert response.document_code == "00000j"
+    assert response.registrar_code == "edep"
+    assert response.digital_document_id == "52974"

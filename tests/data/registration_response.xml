@@ -1,0 +1,2 @@
+<?xml version="1.0"?>
+<response xmlns="http://resolver.nkp.cz/v3/" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.w3.org/2001/XMLSchema-instance http://resolver-test.nkp.cz/api/v3/response.xsd"><urnNbn><status>ACTIVE</status><value>urn:nbn:cz:edep-00000j</value><countryCode>cz</countryCode><registrarCode>edep</registrarCode><documentCode>00000j</documentCode><digitalDocumentId>52974</digitalDocumentId><registered>2015-04-29T17:43:48.399+02:00</registered></urnNbn></response>

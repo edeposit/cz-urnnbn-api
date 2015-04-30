@@ -46,7 +46,6 @@ class Registrar(object):
             _both_set_and_different(self.modified, other.modified),
             _both_set_and_different(self.modes, other.modes),
         ])
-
         if not_important_checks:
             return False
 
