@@ -16,7 +16,17 @@ class Modes(object):
 
     def __eq__(self, other):
         return all([
-            self.by_resolver and other.by_resolver,
-            self.by_registrar and other.by_registrar,
-            self.by_reservation and other.by_reservation,
+            self.by_resolver == other.by_resolver,
+            self.by_registrar == other.by_registrar,
+            self.by_reservation == other.by_reservation,
         ])
+
+    def __ne__(self, other):
+        return not self.__eq__(other)
+
+    def __repr__(self):
+        return "Modes(%r%r%r)" % (
+            self.by_resolver,
+            self.by_registrar,
+            self.by_reservation
+        )
