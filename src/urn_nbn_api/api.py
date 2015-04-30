@@ -161,9 +161,9 @@ def _parse_registrar(reg_tag):
     by_reservation = _by_attr(modes_tag, attr={"@name": "BY_RESERVATION"})
 
     modes = Modes(
-        by_resolver=by_resolver["@enabled"],
-        by_registrar=by_registrar["@enabled"],
-        by_reservation=by_reservation["@enabled"],
+        by_resolver=by_resolver["@enabled"].lower() == "true",
+        by_registrar=by_registrar["@enabled"].lower() == "true",
+        by_reservation=by_reservation["@enabled"].lower() == "true",
     )
 
     # parse Registrar data
