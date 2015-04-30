@@ -46,4 +46,22 @@ def test_modes_op_equal():
         by_reservation=False,
     )
 
+    assert not m == m2
     assert m != m2
+
+
+def test_modes_op_equal_same_params():
+    m = Modes(
+        by_resolver=True,
+        by_registrar=True,
+        by_reservation=True,
+    )
+
+    m2 = Modes(
+        by_resolver=True,
+        by_registrar=True,
+        by_reservation=True,
+    )
+
+    assert m == m2
+    assert not m != m2
