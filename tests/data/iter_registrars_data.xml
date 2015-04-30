@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<response xmlns="http://resolver.nkp.cz/v3/" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.w3.org/2001/XMLSchema-instance http://resolver.nkp.cz/api/v3/response.xsd">
+    <registrars>
+        <registrar code="boa001" id="8">
+            <name>MZK</name>
+            <description>Moravská zemská knihovna</description>
+            <created>2012-04-18T23:19:17.727+02:00</created>
+            <modified>2012-10-29T10:39:30.882+01:00</modified>
+            <registrationModes>
+                <mode name="BY_RESOLVER" enabled="true" />
+                <mode name="BY_REGISTRAR" enabled="true" />
+                <mode name="BY_RESERVATION" enabled="true" />
+            </registrationModes>
+        </registrar>
+        <registrar code="aba001" id="9">
+            <name>NKP</name>
+            <description>Národní knihovna Praha</description>
+            <created>2012-04-18T23:19:16.143+02:00</created>
+            <registrationModes>
+                <mode name="BY_RESOLVER" enabled="false" />
+                <mode name="BY_REGISTRAR" enabled="true" />
+                <mode name="BY_RESERVATION" enabled="false" />
+            </registrationModes>
+        </registrar>
+    </registrars>
+</response>
