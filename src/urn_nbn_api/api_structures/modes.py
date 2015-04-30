@@ -13,3 +13,10 @@ class Modes(object):
         self.by_resolver = by_resolver
         self.by_registrar = by_registrar
         self.by_reservation = by_reservation
+
+    def __eq__(self, other):
+        return all([
+            self.by_resolver and other.by_resolver,
+            self.by_registrar and other.by_registrar,
+            self.by_reservation and other.by_reservation,
+        ])
