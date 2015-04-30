@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<response xmlns="http://resolver.nkp.cz/v3/" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.w3.org/2001/XMLSchema-instance http://resolver.nkp.cz/api/v3/response.xsd">
+    <registrar code="boa001" id="16">
+        <name>Moravská zemská knihovna - stará digitalizace</name>
+        <description>Před rokem 2012.</description>
+        <created>2012-04-11T11:15:37.613+02:00</created>
+        <modified>2013-01-10T09:01:03.690+01:00</modified>
+        <registrationModes>
+            <mode name="BY_RESOLVER" enabled="true" />
+            <mode name="BY_REGISTRAR" enabled="true" />
+            <mode name="BY_RESERVATION" enabled="false" />
+        </registrationModes>
+        <digitalLibraries>
+            <digitalLibrary id="13">
+                <name>Kramerius 4</name>
+                <description>aktuální verze knihovny Kramerius</description>
+                <url>http://kramerius.mzk.cz</url>
+                <created>2012-04-11T11:15:37.638+02:00</created>
+            </digitalLibrary>
+            <digitalLibrary id="14">
+                <name>Kramerius 3</name>
+                <description>předchozí verze knihovny Kramerius</description>
+                <url>http://kramerius3.mzk.cz</url>
+                <created>2012-04-11T11:15:37.660+02:00</created>
+            </digitalLibrary>
+        </digitalLibraries>
+        <catalogs>
+            <catalog id="2">
+                <name>Aleph MZK</name>
+                <urlPrefix>http://aleph.mzk.cz</urlPrefix>
+                <created>2012-04-11T11:15:38.525+02:00</created>
+            </catalog>
+        </catalogs>
+    </registrar>
+</response>
