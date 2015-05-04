@@ -8,6 +8,23 @@
 
 # Functions & classes =========================================================
 class URN_NBN(str):
+    """
+    Class used to hold URN:NBN string and also other informations returned
+    from server.
+
+    Note:
+        This class subclasses ``str``, so URN:NBN string can be obtained
+        painlessly.
+
+    Attributes:
+        value (str): Whole URN:NBN string.
+        status (str): ``ACTIVE`` for example.
+        registered (str): ISO 8601 date string.
+        country_code (str): Code of the country (``cz`` for URN:NBN).
+        document_code (str): Part of the URN:NBN holding the code.
+        registrar_code (str): Identification of registrar.
+        digital_document_id (str): ID of the document.
+    """
     def __new__(self, value, *args, **kwargs):
         return super(URN_NBN, self).__new__(self, value)
 
