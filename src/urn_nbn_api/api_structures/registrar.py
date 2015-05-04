@@ -4,11 +4,17 @@
 # Interpreter version: python 2.7
 #
 # Imports =====================================================================
-from modes import Modes
 
 
 # Functions & classes =========================================================
 def _both_set_and_different(first, second):
+    """
+    If any of both arguments are unset (=``None``), return ``False``. Otherwise
+    return result of unequality comparsion.
+
+    Returns:
+        bool: True if both arguments are set and different.
+    """
     if first is None:
         return False
 
@@ -19,6 +25,24 @@ def _both_set_and_different(first, second):
 
 
 class Registrar(object):
+    """
+    Class holding informations about Registrar.
+
+    Attributes:
+        uid (str): Id of the registrar in URN:NBN system.
+        code (str): Code of the registrar. Each organization has own.
+        name (str): Full name of the registrar.
+        created (str): ISO 8601 date string.
+        modified (str): ISO 8601 date string.
+        description (str): Description of the registrar.
+        modes (obj): :class:`.Modes` instance with informations about allowed
+                     modes.
+        catalogs (list): List of :class:`.Catalog` instances with informations
+                 about catalogs used by this registrar.
+        digital_libraries (list): List of :class:`.DigitalLibrary` instances
+                          with informations about digital libraries used by
+                          registrar.
+    """
     def __init__(self, code, uid, name=None, description=None, created=None,
                  modified=None, modes=None):
         self.uid = uid
