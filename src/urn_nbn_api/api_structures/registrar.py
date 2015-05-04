@@ -25,34 +25,6 @@ def _both_set_and_different(first, second):
     return first != second
 
 
-def _by_attr(xdom, attr):
-    """
-    From `xdom` pick element with attributes defined by `attr`.
-
-    Args:
-        xdom (obj): DOM parsed by :mod:`xmltodict`.
-        attr (dict): Dictionary defining all the arguments.
-
-    Returns:
-        obj: List in case that multiple records were returned, or OrderedDict \
-             instance in case that there was only one. Blank array in case of \
-             no matching tag.
-    """
-    out = []
-
-    for tag in xdom:
-        for attr_name, val in attr.iteritems():
-            if attr_name not in tag:
-                break
-
-            if val is not None and tag[attr_name] != val:
-                break
-
-            out.append(tag)
-
-    return out[0] if len(out) == 1 else out
-
-
 class Registrar(object):
     """
     Class holding informations about Registrar.
@@ -121,19 +93,6 @@ class Registrar(object):
         Returns:
             obj: :class:`.Registrar` instance with basic informations.
         """
-        # parse modes
-        modes_tag = reg_tag["registrationModes"]["mode"]
-
-        by_resolver = _by_attr(modes_tag, attr={"@name": "BY_RESOLVER"})
-        by_registrar = _by_attr(modes_tag, attr={"@name": "BY_REGISTRAR"})
-        by_reservation = _by_attr(modes_tag, attr={"@name": "BY_RESERVATION"})
-
-        modes = Modes(
-            by_resolver=by_resolver["@enabled"].lower() == "true",
-            by_registrar=by_registrar["@enabled"].lower() == "true",
-            by_reservation=by_reservation["@enabled"].lower() == "true",
-        )
-
         # parse Registrar data
         return Registrar(
             code=reg_tag["@code"],
@@ -142,5 +101,7 @@ class Registrar(object):
             description=reg_tag.get("description", None),
             created=reg_tag["created"],
             modified=reg_tag.get("modified", None),
-            modes=modes
+            modes=Modes.from_xml_ordereddict(
+                reg_tag["registrationModes"]["mode"]
+            )
         )
