@@ -9,6 +9,17 @@ from registrar import _both_set_and_different
 
 # Functions & classes =========================================================
 class DigitalLibrary(object):
+    """
+    Container used to hold informations about given digital library, where the
+    document to which the URN:NBN points, stored.
+
+    Atrributes:
+        url (str): URL of the library.
+        uid (str): ID of the library.
+        name (str): Name of the digital library.
+        created (str): ISO 8601 string.
+        description (str): Free text description of the library.
+    """
     def __init__(self, uid, name, description=None, url=None, created=None):
         self.url = url
         self.uid = uid
