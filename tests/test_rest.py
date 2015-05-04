@@ -101,13 +101,6 @@ def test_iter_registrars(monkeypatch, iter_registrars_data):
     )
 
 
-def test_to_list():
-    assert api._to_list(1) == [1]
-
-    assert api._to_list([1]) == [1]
-    assert api._to_list((1,)) == (1,)
-
-
 def test_get_registrar_info(monkeypatch, registrar_data):
     def send_request(*args, **kwargs):
         return registrar_data

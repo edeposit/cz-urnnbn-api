@@ -5,26 +5,14 @@
 #
 # Imports =====================================================================
 from modes import Modes
+from catalog import Catalog
+from digital_library import DigitalLibrary
+
+from tools import to_list
+from tools import both_set_and_different
 
 
 # Functions & classes =========================================================
-def _both_set_and_different(first, second):
-    """
-    If any of both arguments are unset (=``None``), return ``False``. Otherwise
-    return result of unequality comparsion.
-
-    Returns:
-        bool: True if both arguments are set and different.
-    """
-    if first is None:
-        return False
-
-    if second is None:
-        return False
-
-    return first != second
-
-
 class Registrar(object):
     """
     Class holding informations about Registrar.
@@ -65,11 +53,11 @@ class Registrar(object):
             return False
 
         not_important_checks = any([
-            _both_set_and_different(self.name, other.name),
-            _both_set_and_different(self.description, other.description),
-            _both_set_and_different(self.created, other.created),
-            _both_set_and_different(self.modified, other.modified),
-            _both_set_and_different(self.modes, other.modes),
+            both_set_and_different(self.name, other.name),
+            both_set_and_different(self.description, other.description),
+            both_set_and_different(self.created, other.created),
+            both_set_and_different(self.modified, other.modified),
+            both_set_and_different(self.modes, other.modes),
         ])
         if not_important_checks:
             return False
@@ -94,7 +82,7 @@ class Registrar(object):
             obj: :class:`.Registrar` instance with basic informations.
         """
         # parse Registrar data
-        return Registrar(
+        registrar = Registrar(
             code=reg_tag["@code"],
             uid=reg_tag["@id"],
             name=reg_tag["name"],
@@ -105,3 +93,34 @@ class Registrar(object):
                 reg_tag["registrationModes"]["mode"]
             )
         )
+
+        if not reg_tag.get("digitalLibraries", None):
+            return registrar
+
+        # parse digital_libraries
+        for dl_tag in to_list(reg_tag["digitalLibraries"]["digitalLibrary"]):
+            registrar.digital_libraries.append(
+                DigitalLibrary(
+                    uid=dl_tag["@id"],
+                    name=dl_tag["name"],
+                    description=dl_tag.get("description", None),
+                    url=dl_tag.get("url", None),
+                    created=dl_tag.get("created", None),
+                )
+            )
+
+        if not reg_tag.get("catalogs", None):
+            return registrar
+
+        # parse catalogs
+        for catalog_tag in to_list(reg_tag["catalogs"]["catalog"]):
+            registrar.catalogs.append(
+                Catalog(
+                    uid=catalog_tag["@id"],
+                    name=catalog_tag["name"],
+                    url_prefix=catalog_tag.get("urlPrefix", None),
+                    created=catalog_tag.get("created", None),
+                )
+            )
+
+        return registrar

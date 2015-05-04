@@ -4,7 +4,7 @@
 # Interpreter version: python 2.7
 #
 # Imports =====================================================================
-from registrar import _both_set_and_different
+from tools import both_set_and_different
 
 
 # Functions & classes =========================================================
@@ -32,9 +32,9 @@ class DigitalLibrary(object):
             return False
 
         return not any([
-            _both_set_and_different(self.description, other.description),
-            _both_set_and_different(self.url, other.url),
-            _both_set_and_different(self.created, other.created),
+            both_set_and_different(self.description, other.description),
+            both_set_and_different(self.url, other.url),
+            both_set_and_different(self.created, other.created),
         ])
 
     def __ne__(self, other):

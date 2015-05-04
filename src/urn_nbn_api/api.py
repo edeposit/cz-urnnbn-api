@@ -12,11 +12,8 @@ import dhtmlparser
 
 import settings
 
-from api_structures import Modes
-from api_structures import Catalog
 from api_structures import URN_NBN
 from api_structures import Registrar
-from api_structures import DigitalLibrary
 
 
 # Functions & classes =========================================================
@@ -133,22 +130,6 @@ def iter_registrars():
         yield Registrar.from_xml_ordereddict(registrar_tag)
 
 
-def _to_list(tag):
-    """
-    Put `tag` to list if it ain't list/tuple already.
-
-    Args:
-        tag (obj): Anything.
-
-    Returns:
-        list: Tag.
-    """
-    if isinstance(tag, tuple) or isinstance(tag, list):
-        return tag
-
-    return [tag]
-
-
 def get_registrar_info(reg_code):
     """
     Get detailed informations about registrar with `reg_code`.
@@ -167,38 +148,7 @@ def get_registrar_info(reg_code):
     xdom = xmltodict.parse(data)
     reg_tag = xdom["response"]["registrar"]
 
-    registrar = Registrar.from_xml_ordereddict(reg_tag)
-
-    if not reg_tag.get("digitalLibraries", None):
-        return registrar
-
-    # parse digital_libraries
-    for dl_tag in _to_list(reg_tag["digitalLibraries"]["digitalLibrary"]):
-        registrar.digital_libraries.append(
-            DigitalLibrary(
-                uid=dl_tag["@id"],
-                name=dl_tag["name"],
-                description=dl_tag.get("description", None),
-                url=dl_tag.get("url", None),
-                created=dl_tag.get("created", None),
-            )
-        )
-
-    if not reg_tag.get("catalogs", None):
-        return registrar
-
-    # parse catalogs
-    for catalog_tag in _to_list(reg_tag["catalogs"]["catalog"]):
-        registrar.catalogs.append(
-            Catalog(
-                uid=catalog_tag["@id"],
-                name=catalog_tag["name"],
-                url_prefix=catalog_tag.get("urlPrefix", None),
-                created=catalog_tag.get("created", None),
-            )
-        )
-
-    return registrar
+    return Registrar.from_xml_ordereddict(reg_tag)
 
 
 def register_document(xml, reg_code=settings.REG_CODE):
