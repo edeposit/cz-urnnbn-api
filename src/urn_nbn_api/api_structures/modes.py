@@ -8,6 +8,15 @@
 
 # Functions & classes =========================================================
 class Modes(object):
+    """
+    Container holding informations about modes which may be used by registrar
+    to register documents.
+
+    Atrributes:
+        by_resolver (bool): True if the mode can be used.
+        by_registrar (bool): True if the mode can be used.
+        by_reservation (bool): True if the mode can be used.
+    """
     def __init__(self, by_resolver=False, by_registrar=False,
                  by_reservation=False):
         self.by_resolver = by_resolver
