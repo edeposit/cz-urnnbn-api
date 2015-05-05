@@ -190,8 +190,11 @@ class MonographPublication(object):
 
         return output
 
-    def __str__(self):
+    def to_xml(self):
         return xmltodict.unparse(self.to_xml_dict(), pretty=True)
+
+    def __str__(self):
+        return self.to_xml()
 
 
 class MonographVolume(MonographPublication):
@@ -273,7 +276,7 @@ def compose_mono_xml(mods_xml):
     Raises:
         ValueError: If can't find required data in MODS (author, title).
     """
-    return MonographPublication(mods_xml).__str__()
+    return MonographPublication(mods_xml).to_xml()
 
 
 def compose_mono_volume_xml(mods_volume_xml):
@@ -290,4 +293,4 @@ def compose_mono_volume_xml(mods_volume_xml):
     Raises:
         ValueError: If can't find required data in MODS (author, title).
     """
-    return MonographVolume(mods_volume_xml).__str__()
+    return MonographVolume(mods_volume_xml).to_xml()
