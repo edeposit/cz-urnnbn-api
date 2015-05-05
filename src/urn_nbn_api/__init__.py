@@ -4,17 +4,5 @@
 # Interpreter version: python 2.7
 #
 # Imports =====================================================================
-
-
-
-# Variables ===================================================================
-
-
-
-# Functions & classes =========================================================
-
-
-
-# Main program ================================================================
-if __name__ == '__main__':
-    pass
+from xml_composer import compose_mono_xml
+from xml_composer import compose_mono_volume_xml
