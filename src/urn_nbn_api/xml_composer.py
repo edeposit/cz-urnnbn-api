@@ -24,6 +24,8 @@ class MonographPublication(object):
         self.dom = dhtmlparser.parseString(mods_xml)
         self.xdom = xmltodict.parse(mods_xml)
 
+        self.xml_dict = self.to_xml_dict()
+
     def _get_title_info(self):
         return self.xdom["mods:mods"]["mods:titleInfo"]
 
@@ -191,7 +193,7 @@ class MonographPublication(object):
         return output
 
     def to_xml(self):
-        return xmltodict.unparse(self.to_xml_dict(), pretty=True)
+        return xmltodict.unparse(self.xml_dict, pretty=True)
 
     def __str__(self):
         return self.to_xml()
