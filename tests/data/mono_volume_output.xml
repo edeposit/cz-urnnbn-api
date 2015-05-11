@@ -1,20 +1,25 @@
 <?xml version="1.0" encoding="utf-8"?>
 <r:import xmlns:r="http://resolver.nkp.cz/v3/">
-    <r:monographVolume>
-        <r:titleInfo>
-            <r:monographTitle>Dračí doupě plus</r:monographTitle>
-            <r:volumeTitle>1</r:volumeTitle>
-        </r:titleInfo>
-        <r:ccnb>cnb001852175</r:ccnb>
-        <r:isbn>978-80-85979-67-1</r:isbn>
-        <r:otherId>87d27370-db5b-11e3-b110-005054787e51</r:otherId>
-        <r:documentType>elektronický zdroj</r:documentType>
-        <r:digitalBorn>true</r:digitalBorn>
-        <r:primaryOriginator type="AUTHOR">Ježek, Matouš</r:primaryOriginator>
-        <r:publication>
-            <r:publisher>Altar</r:publisher>
-            <r:place>Ostrava</r:place>
-            <r:year>2012</r:year>
-        </r:publication>
-    </r:monographVolume>
+	<r:monographVolume>
+		<r:titleInfo>
+			<r:monographTitle>Dračí doupě plus</r:monographTitle>
+			<r:volumeTitle>1</r:volumeTitle>
+		</r:titleInfo>
+		<r:ccnb>cnb001852175</r:ccnb>
+		<r:isbn>978-80-85979-67-1</r:isbn>
+		<r:otherId>87d27370-db5b-11e3-b110-005054787e51</r:otherId>
+		<r:documentType>elektronický zdroj</r:documentType>
+		<r:digitalBorn>true</r:digitalBorn>
+		<r:primaryOriginator type="AUTHOR">Ježek, Matouš</r:primaryOriginator>
+		<r:publication>
+			<r:publisher>Altar</r:publisher>
+			<r:place>Ostrava</r:place>
+			<r:year>2012</r:year>
+		</r:publication>
+	</r:monographVolume>
+	<r:digitalDocument>
+		<r:technicalMetadata>
+			<r:format>pdf</r:format>
+		</r:technicalMetadata>
+	</r:digitalDocument>
 </r:import>

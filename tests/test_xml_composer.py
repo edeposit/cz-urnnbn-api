@@ -8,9 +8,11 @@ import os
 import sys
 
 import pytest
+from odictliteral import odict
 
 sys.path.insert(0, "src")
 import urn_nbn_api
+from urn_nbn_api.xml_composer import _create_path
 from urn_nbn_api.xml_composer import compose_mono_xml
 from urn_nbn_api.xml_composer import compose_mono_volume_xml
 
@@ -46,14 +48,44 @@ def mono_vol_out_example():
 
 # Tests =======================================================================
 def test_mono_xml_conversion(mono_mods_example, mono_out_example):
-    out = compose_mono_xml(mono_mods_example).encode("utf-8")
+    out = compose_mono_xml(mono_mods_example, "pdf").encode("utf-8")
 
     # compare without whitespaces
-    assert out.split() == mono_out_example.split()
+    assert out == mono_out_example
 
 
 def test_mono_volume_xml_conversion(mono_mods_example, mono_vol_out_example):
-    out = compose_mono_volume_xml(mono_mods_example).encode("utf-8")
+    out = compose_mono_volume_xml(mono_mods_example, "pdf").encode("utf-8")
 
     # compare without whitespaces
     assert out.split() == mono_vol_out_example.split()
+
+
+def test_create_path():
+    r = odict(key="hello")
+
+    _create_path(r, odict, ["subpath", "more"])
+
+    assert r == odict[
+        "key": "hello",
+        "subpath": odict[
+            "more": odict()
+        ]
+    ]
+
+
+def test_create_path_existing_keys():
+    r = odict(key="hello")
+
+    more = _create_path(r, odict, ["key", "subpath", "more"])
+
+    assert r == odict[
+        "key": odict[
+            "subpath": odict[
+                "more": odict()
+            ]
+        ]
+    ]
+
+    more["asd"] = "val"
+    assert more["asd"] == r["key"]["subpath"]["more"]["asd"]
