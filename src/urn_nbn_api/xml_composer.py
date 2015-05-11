@@ -12,8 +12,6 @@ See:
     - https://code.google.com/p/czidlo/wiki/ApiV3
 """
 # Imports =====================================================================
-from collections import defaultdict
-
 import xmltodict
 import dhtmlparser
 
@@ -22,6 +20,20 @@ from odictliteral import odict
 
 # Functions & classes =========================================================
 def _create_path(root, dict_type, path):
+    """
+    Create nested dicts in `root` using `dict_type` as constructor. Keys from
+    `path` are used to construct the keys for nested dicts.
+
+    Args:
+        root (dict instance): Root dictionary, where the nested dicts will be
+             created.
+        dict_type (dict-like class): Class which will be used to construct
+                  dicts - ``dict_type()`.
+        path (list/tuple of strings): List of keys for nested ``dict_type``.
+
+    Returns:
+        dict: Return last nested dict (dict at last element at `path`).
+    """
     for sub_path in path:
         if not isinstance(root.get(sub_path, None), dict):
             root[sub_path] = dict_type()
@@ -157,6 +169,13 @@ class MonographPublication(object):
             mono_root["r:" + out] = tmp
 
     def to_xml_dict(self):
+        """
+        Convert `self` to nested ordered dicts, which may be serialized to XML
+        using ``xmltodict`` module.
+
+        Returns:
+            OrderedDict: XML parsed to ordered dicts.
+        """
         # compose output template
         output = odict[
             "r:import": odict[
@@ -205,7 +224,13 @@ class MonographPublication(object):
 
         return output
 
-    def add_format(self, format):
+    def add_format(self, file_format):
+        """
+        Add informations about `file_format` to internal XML dict.
+
+        Args:
+            file_format (str): ``PDF``, ``jpeg``, etc..
+        """
         format_dict = _create_path(
             self.xml_dict,
             odict,
@@ -217,7 +242,7 @@ class MonographPublication(object):
             ]
         )
 
-        format_dict["#text"] = format
+        format_dict["#text"] = file_format
 
     def to_xml(self):
         # print self.xml_dict
@@ -248,6 +273,13 @@ class MonographVolume(MonographPublication):
         return title_info[0].getContent().decode("utf-8")
 
     def to_xml_dict(self):
+        """
+        Convert `self` to nested ordered dicts, which may be serialized to XML
+        using ``xmltodict`` module.
+
+        Returns:
+            OrderedDict: XML parsed to ordered dicts.
+        """
         # compose output template
         output = odict[
             "r:import": odict[
