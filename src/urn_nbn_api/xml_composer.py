@@ -12,12 +12,25 @@ See:
     - https://code.google.com/p/czidlo/wiki/ApiV3
 """
 # Imports =====================================================================
+from collections import defaultdict
+
 import xmltodict
 import dhtmlparser
+
 from odictliteral import odict
 
 
 # Functions & classes =========================================================
+def _create_path(root, dict_type, path):
+    for sub_path in path:
+        if not isinstance(root.get(sub_path, None), dict):
+            root[sub_path] = dict_type()
+
+        root = root[sub_path]
+
+    return root
+
+
 class MonographPublication(object):
     def __init__(self, mods_xml):
         self.mods_xml = mods_xml
@@ -192,7 +205,22 @@ class MonographPublication(object):
 
         return output
 
+    def add_format(self, format):
+        format_dict = _create_path(
+            self.xml_dict,
+            odict,
+            [
+                "r:import",
+                "r:digitalDocument",
+                "r:technicalMetadata",
+                "r:format",
+            ]
+        )
+
+        format_dict["#text"] = format
+
     def to_xml(self):
+        # print self.xml_dict
         return xmltodict.unparse(self.xml_dict, pretty=True)
 
     def __str__(self):
@@ -264,7 +292,7 @@ class MonographVolume(MonographPublication):
         return output
 
 
-def compose_mono_xml(mods_xml):
+def compose_mono_xml(mods_xml, file_format):
     """
     Convert MODS monograph record to XML, which is required by URN:NBN
     resolver.
@@ -278,10 +306,13 @@ def compose_mono_xml(mods_xml):
     Raises:
         ValueError: If can't find required data in MODS (author, title).
     """
-    return MonographPublication(mods_xml).to_xml()
+    pub = MonographPublication(mods_xml)
+    pub.add_format(file_format)
+
+    return pub.to_xml()
 
 
-def compose_mono_volume_xml(mods_volume_xml):
+def compose_mono_volume_xml(mods_volume_xml, file_format):
     """
     Convert MODS monograph, multi-volume record to XML, which is required by
     URN:NBN resolver.
@@ -295,4 +326,7 @@ def compose_mono_volume_xml(mods_volume_xml):
     Raises:
         ValueError: If can't find required data in MODS (author, title).
     """
-    return MonographVolume(mods_volume_xml).to_xml()
+    pub = MonographVolume(mods_volume_xml)
+    pub.add_format(file_format)
+
+    return pub.to_xml()
