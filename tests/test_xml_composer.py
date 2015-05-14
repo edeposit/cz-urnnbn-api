@@ -63,17 +63,59 @@ def test_mono_xml_conversion(mono_out_example):
         format="pdf",
     )
 
-    # with open("asd.xml", "w") as f:
-        # f.write(out.to_xml())
-
-    # compare without whitespaces
     assert out.to_xml() == mono_out_example
 
 
-# def test_mono_volume_xml_conversion(mono_mods_example, mono_vol_out_example):
+def test_mono_xml_without_uuid(mono_out_example):
+    out = MonographComposer(
+        title="Dračí doupě plus",
+        ccnb="cnb001852175",
+        isbn="978-80-85979-67-1",
+        document_type="elektronický zdroj",
+        digital_born="true",
+        author="Ježek, Matouš",
+        publisher="Altar",
+        place="Ostrava",
+        year="2012",
+        format="pdf",
+    )
 
-#     # compare without whitespaces
-#     assert out == mono_vol_out_example
+    # remove uuid
+    mono = mono_out_example.decode("utf-8").splitlines()
+    del mono[8]
+    mono = "\n".join(mono)
+
+    assert out.to_xml().decode("utf-8") == mono
+
+
+def test_mono_xml_without_invalid_parameter():
+    with pytest.raises(ValueError):
+        MonographComposer(
+            title="Dračí doupě plus",
+            ccnb="cnb001852175",
+            isbn="978-80-85979-67-1",
+            azgabash="elektronický zdroj"
+        )
+
+def test_mono_volume_xml_conversion(mono_mods_example, mono_vol_out_example):
+    out = MonographComposer(
+        title="Dračí doupě plus",
+        ccnb="cnb001852175",
+        isbn="978-80-85979-67-1",
+        other_id="87d27370-db5b-11e3-b110-005054787e51",
+        document_type="elektronický zdroj",
+        digital_born="true",
+        author="Ježek, Matouš",
+        publisher="Altar",
+        place="Ostrava",
+        year="2012",
+        format="pdf",
+    )
+
+    with open("asd.xml", "w") as f:
+        f.write(out.to_xml())
+
+    assert out.to_xml() == mono_vol_out_example
 
 
 # def test_create_path():
