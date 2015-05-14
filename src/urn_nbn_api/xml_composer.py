@@ -245,7 +245,12 @@ class MonographPublication(object):
         format_dict["#text"] = file_format
 
     def to_xml(self):
-        # print self.xml_dict
+        """
+        Convert itself to XML unicode string.
+
+        Returns:
+            unicode: XML.
+        """
         return xmltodict.unparse(self.xml_dict, pretty=True)
 
     def __str__(self):

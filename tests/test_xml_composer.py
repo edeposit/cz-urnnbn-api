@@ -58,7 +58,7 @@ def test_mono_volume_xml_conversion(mono_mods_example, mono_vol_out_example):
     out = compose_mono_volume_xml(mono_mods_example, "pdf").encode("utf-8")
 
     # compare without whitespaces
-    assert out.split() == mono_vol_out_example.split()
+    assert out == mono_vol_out_example
 
 
 def test_create_path():
