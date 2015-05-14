@@ -49,7 +49,7 @@ class MonographComposer(object):
         self.subtitle = None
         self.ccnb = None
         self.isbn = None
-        self.otherId = None
+        self.other_id = None
         self.document_type = None
         self.digital_born = True
         self.author = None
@@ -61,6 +61,8 @@ class MonographComposer(object):
         for key, val in kwargs.iteritems():
             if key in self.__dict__:
                 self.__dict__[key] = val
+            else:
+                raise ValueError("Can't set %s parameter!" % key)
 
     def _assign_pattern(self, where, key, what):
         if what:
@@ -69,8 +71,8 @@ class MonographComposer(object):
     def _add_identifier_to_mono(self, mono_root, identifier, out=None):
         out = out if out is not None else identifier
 
-        if identifier:
-            mono_root["r:" + out] = identifier
+        if hasattr(self, identifier) and getattr(self, identifier) is not None:
+            mono_root["r:" + out] = getattr(self, identifier)
 
     def to_xml_dict(self):
         root = odict[
@@ -95,7 +97,7 @@ class MonographComposer(object):
         # handle ccnb, isbn, uuid
         self._add_identifier_to_mono(mono_root, "ccnb")
         self._add_identifier_to_mono(mono_root, "isbn")
-        self._add_identifier_to_mono(mono_root, "uuid", out="otherId")
+        self._add_identifier_to_mono(mono_root, "other_id", out="otherId")
 
         # add form of the book
         self._assign_pattern(mono_root, "r:documentType", self.document_type)
@@ -111,25 +113,39 @@ class MonographComposer(object):
         if any([self.place, self.publisher, self.year]):
             publ = odict()
 
-            self._assign_pattern(publ, "r:publisher", self.place)
-            self._assign_pattern(publ, "r:place", self.publisher)
+            self._assign_pattern(publ, "r:publisher", self.publisher)
+            self._assign_pattern(publ, "r:place", self.place)
             self._assign_pattern(publ, "r:year", self.year)
 
             mono_root["r:publication"] = publ
+
+        if self.format:
+            format_dict = _create_path(
+                root,
+                odict,
+                [
+                    "r:import",
+                    "r:digitalDocument",
+                    "r:technicalMetadata",
+                    "r:format",
+                ]
+            )
+
+            format_dict["#text"] = self.format
 
         return root
 
     def to_xml(self):
         """
-        Convert itself to XML unicode string.
+        Convert itself to XML string.
 
         Returns:
-            unicode: XML.
+            str: XML.
         """
         return xmltodict.unparse(
             self.to_xml_dict(),
             pretty=True
-        )
+        ).encode("utf-8")
 
     def __str__(self):
         return self.to_xml()
