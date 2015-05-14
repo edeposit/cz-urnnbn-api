@@ -43,119 +43,24 @@ def _create_path(root, dict_type, path):
     return root
 
 
-class MonographPublication(object):
-    def __init__(self, mods_xml):
-        self.mods_xml = mods_xml
-        self.dom = dhtmlparser.parseString(mods_xml)
-        self.xdom = xmltodict.parse(mods_xml)
+class MonographComposer(object):
+    def __init__(self, **kwargs):
+        self.title = None
+        self.subtitle = None
+        self.ccnb = None
+        self.isbn = None
+        self.otherId = None
+        self.document_type = None
+        self.digital_born = True
+        self.author = None
+        self.publisher = None
+        self.place = None
+        self.year = None
+        self.format = None
 
-        self.xml_dict = self.to_xml_dict()
-
-    def _get_title_info(self):
-        return self.xdom["mods:mods"]["mods:titleInfo"]
-
-    def get_title(self):
-        title = self._get_title_info()["mods:title"]
-
-        if type(title) in [tuple, list]:
-            return title[0]
-
-        return title
-
-    def get_subtitle(self):
-        subtitle = self._get_title_info().get("mods:subTitle", None)
-
-        if not subtitle:
-            return None
-
-        if type(subtitle) in [tuple, list]:
-            return subtitle[0]
-
-        return subtitle
-
-    def get_author(self):
-        author = self.dom.match(
-            "mods:mods",
-            ["mods:name", {"type": "personal", "usage": "primary"}],
-            {
-                "tag_name": "mods:namePart",
-                "fn": lambda x: x.params.get("type", "") != "date"
-            }
-        )
-        if not author:
-            author = self.dom.match(
-                "mods:mods",
-                ["mods:name", {"type": "corporate"}]
-            )
-        if not author:
-            author = self.dom.match(
-                "mods:mods",
-                ["mods:name", {"type": 'conference'}]
-            )
-        if not author:
-            raise ValueError("Can't find namePart for author!")
-
-        return author[0].getContent().decode("utf-8")
-
-    def get_form(self):
-        forms = self.dom.match(
-            "mods:mods",
-            "mods:physicalDescription",
-            {
-                "tag_name": "mods:form",
-                "fn": lambda x: x.params.get("authority", "") == "gmd"
-            }
-        )
-        if not forms:
-            return
-
-        return forms[0].getContent().decode("utf-8")
-
-    def _get_description(self):
-        return self.xdom["mods:mods"].get("mods:originInfo", None)
-
-    def get_place(self):
-        place = self.dom.match(
-            "mods:originInfo",
-            "mods:place",
-            ["mods:placeTerm", {"type": "text"}]
-        )
-        if not place:
-            return
-
-        return place[0].getContent().decode("utf-8")
-
-    def get_publisher(self):
-        if not self._get_description():
-            return
-
-        return self._get_description().get("mods:publisher", None)
-
-    def get_year(self):
-        if not self._get_description():
-            return
-
-        return self._get_description().get("mods:dateIssued", None)
-
-    def get_identifier(self, name):
-        identifier = filter(
-            lambda x: x.get("@type", False) == name,
-            self.xdom["mods:mods"].get("mods:identifier", [])
-        )
-
-        if not identifier:
-            return
-
-        return identifier[0]["#text"]
-
-    def get_ccnb(self):
-        return self.get_identifier("ccnb")
-
-    def get_isbn(self):
-        return self.get_identifier("isbn")
-
-    def get_uuid(self):
-        return self.get_identifier("uuid")
+        for key, val in kwargs.iteritems():
+            if key in self.__dict__:
+                self.__dict__[key] = val
 
     def _assign_pattern(self, where, key, what):
         if what:
@@ -164,35 +69,27 @@ class MonographPublication(object):
     def _add_identifier_to_mono(self, mono_root, identifier, out=None):
         out = out if out is not None else identifier
 
-        tmp = self.get_identifier(identifier)
-        if tmp:
-            mono_root["r:" + out] = tmp
+        if identifier:
+            mono_root["r:" + out] = identifier
 
     def to_xml_dict(self):
-        """
-        Convert `self` to nested ordered dicts, which may be serialized to XML
-        using ``xmltodict`` module.
-
-        Returns:
-            OrderedDict: XML parsed to ordered dicts.
-        """
-        # compose output template
-        output = odict[
+        root = odict[
             "r:import": odict[
                 "@xmlns:r": "http://resolver.nkp.cz/v3/",
                 "r:monograph": odict[
                     "r:titleInfo": odict[
-                        "r:title": self.get_title(),
+                        "r:title": self.title,
                     ],
                 ],
             ]
         ]
-        mono_root = output["r:import"]["r:monograph"]
+        mono_root = root["r:import"]["r:monograph"]
 
+        # subtitle
         self._assign_pattern(
             mono_root["r:titleInfo"],
             "r:subTitle",
-            self.get_subtitle()
+            self.subtitle
         )
 
         # handle ccnb, isbn, uuid
@@ -201,48 +98,26 @@ class MonographPublication(object):
         self._add_identifier_to_mono(mono_root, "uuid", out="otherId")
 
         # add form of the book
-        self._assign_pattern(mono_root, "r:documentType", self.get_form())
+        self._assign_pattern(mono_root, "r:documentType", self.document_type)
 
-        mono_root["r:digitalBorn"] = "true"
+        mono_root["r:digitalBorn"] = self.digital_born
 
-        if self.get_author():
+        if self.author:
             mono_root["r:primaryOriginator"] = odict[
                 "@type": "AUTHOR",
-                "#text": self.get_author()
+                "#text": self.author
             ]
 
-        if self._get_description() and any([self.get_place(),
-                                            self.get_publisher(),
-                                            self.get_year()]):
+        if any([self.place, self.publisher, self.year]):
             publ = odict()
 
-            self._assign_pattern(publ, "r:publisher", self.get_publisher())
-            self._assign_pattern(publ, "r:place", self.get_place())
-            self._assign_pattern(publ, "r:year", self.get_year())
+            self._assign_pattern(publ, "r:publisher", self.place)
+            self._assign_pattern(publ, "r:place", self.publisher)
+            self._assign_pattern(publ, "r:year", self.year)
 
             mono_root["r:publication"] = publ
 
-        return output
-
-    def add_format(self, file_format):
-        """
-        Add informations about `file_format` to internal XML dict.
-
-        Args:
-            file_format (str): ``PDF``, ``jpeg``, etc..
-        """
-        format_dict = _create_path(
-            self.xml_dict,
-            odict,
-            [
-                "r:import",
-                "r:digitalDocument",
-                "r:technicalMetadata",
-                "r:format",
-            ]
-        )
-
-        format_dict["#text"] = file_format
+        return root
 
     def to_xml(self):
         """
@@ -251,119 +126,10 @@ class MonographPublication(object):
         Returns:
             unicode: XML.
         """
-        return xmltodict.unparse(self.xml_dict, pretty=True)
+        return xmltodict.unparse(
+            self.to_xml_dict(),
+            pretty=True
+        )
 
     def __str__(self):
         return self.to_xml()
-
-
-class MonographVolume(MonographPublication):
-    def get_volume_title(self):
-        title_info = self.dom.match(
-            "mods:mods",
-            "mods:titleInfo",
-            "mods:partNumber"
-        )
-
-        if not title_info:
-            title_info = self.dom.match(
-                "mods:mods",
-                "mods:titleInfo",
-                "mods:partName"
-            )
-
-        if not title_info:
-            raise ValueError("Can't find volumeTitle!")
-
-        return title_info[0].getContent().decode("utf-8")
-
-    def to_xml_dict(self):
-        """
-        Convert `self` to nested ordered dicts, which may be serialized to XML
-        using ``xmltodict`` module.
-
-        Returns:
-            OrderedDict: XML parsed to ordered dicts.
-        """
-        # compose output template
-        output = odict[
-            "r:import": odict[
-                "@xmlns:r": "http://resolver.nkp.cz/v3/",
-                "r:monographVolume": odict[
-                    "r:titleInfo": odict[
-                        "r:monographTitle": self.get_title(),
-                        "r:volumeTitle": self.get_volume_title(),
-                    ],
-                ],
-            ]
-        ]
-        mono_root = output["r:import"]["r:monographVolume"]
-
-        # handle ccnb, isbn, uuid
-        self._add_identifier_to_mono(mono_root, "ccnb")
-        self._add_identifier_to_mono(mono_root, "isbn")
-        self._add_identifier_to_mono(mono_root, "uuid", out="otherId")
-
-        # add form of the book
-        self._assign_pattern(mono_root, "r:documentType", self.get_form())
-
-        mono_root["r:digitalBorn"] = "true"
-
-        if self.get_author():
-            mono_root["r:primaryOriginator"] = odict[
-                "@type": "AUTHOR",
-                "#text": self.get_author()
-            ]
-
-        if self._get_description() and any([self.get_place(),
-                                            self.get_publisher(),
-                                            self.get_year()]):
-            publ = odict()
-
-            self._assign_pattern(publ, "r:publisher", self.get_publisher())
-            self._assign_pattern(publ, "r:place", self.get_place())
-            self._assign_pattern(publ, "r:year", self.get_year())
-
-            mono_root["r:publication"] = publ
-
-        return output
-
-
-def compose_mono_xml(mods_xml, file_format):
-    """
-    Convert MODS monograph record to XML, which is required by URN:NBN
-    resolver.
-
-    Args:
-        mods_xml (str): MODS volume XML.
-
-    Returns:
-        str: XML for URN:NBN resolver.
-
-    Raises:
-        ValueError: If can't find required data in MODS (author, title).
-    """
-    pub = MonographPublication(mods_xml)
-    pub.add_format(file_format)
-
-    return pub.to_xml()
-
-
-def compose_mono_volume_xml(mods_volume_xml, file_format):
-    """
-    Convert MODS monograph, multi-volume record to XML, which is required by
-    URN:NBN resolver.
-
-    Args:
-        mods_volume_xml (str): MODS volume XML.
-
-    Returns:
-        str: XML for URN:NBN resolver.
-
-    Raises:
-        ValueError: If can't find required data in MODS (author, title).
-    """
-    pub = MonographVolume(mods_volume_xml)
-    pub.add_format(file_format)
-
-    return pub.to_xml()
