@@ -17,7 +17,6 @@ from urn_nbn_api.xml_composer import MonographComposer
 from urn_nbn_api.xml_composer import MultiMonoComposer
 
 
-# Variables ===================================================================
 # Functions & classes =========================================================
 def get_data_path():
     wd = os.path.dirname(__file__)
@@ -32,17 +31,12 @@ def data_context(fn):
 
 # Fixtures ====================================================================
 @pytest.fixture
-def mono_mods_example():
-    return data_context("mods_mono.xml")
-
-
-@pytest.fixture
 def mono_out_example():
     return data_context("mono_output.xml")
 
 
 @pytest.fixture
-def mono_vol_out_example():
+def multimono_out_example():
     return data_context("mono_volume_output.xml")
 
 
@@ -113,7 +107,7 @@ def test_swap_keys():
     ]
 
 
-def test_mono_volume_xml_conversion(mono_vol_out_example):
+def test_mono_volume_xml_conversion(multimono_out_example):
     out = MultiMonoComposer(
         title="Dračí doupě plus",
         ccnb="cnb001852175",
@@ -129,7 +123,7 @@ def test_mono_volume_xml_conversion(mono_vol_out_example):
         volume_title="1",
     )
 
-    assert out.to_xml() == mono_vol_out_example
+    assert out.to_xml() == multimono_out_example
 
 
 def test_create_path():
@@ -175,3 +169,14 @@ def test_assign_pattern():
         "key": "hello",
         "otherkey": "hi"
     ]
+
+
+def test_setting_uset_is_disabled():
+    mc = MonographComposer()
+    mmc = MultiMonoComposer()
+
+    with pytest.raises(ValueError):
+        mc.azgabash = True
+
+    with pytest.raises(ValueError):
+        mmc.azgabash = True
