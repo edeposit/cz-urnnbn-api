@@ -15,7 +15,6 @@ from odictliteral import odict
 import urn_nbn_api
 from urn_nbn_api.xml_composer import MonographComposer
 from urn_nbn_api.xml_composer import MultiMonoComposer
-# from urn_nbn_api.xml_composer import compose_mono_volume_xml
 
 
 # Variables ===================================================================
@@ -133,31 +132,46 @@ def test_mono_volume_xml_conversion(mono_vol_out_example):
     assert out.to_xml() == mono_vol_out_example
 
 
-# def test_create_path():
-#     r = odict(key="hello")
+def test_create_path():
+    r = odict(key="hello")
 
-#     _create_path(r, odict, ["subpath", "more"])
+    MonographComposer._create_path(r, odict, ["subpath", "more"])
 
-#     assert r == odict[
-#         "key": "hello",
-#         "subpath": odict[
-#             "more": odict()
-#         ]
-#     ]
+    assert r == odict[
+        "key": "hello",
+        "subpath": odict[
+            "more": odict()
+        ]
+    ]
 
 
-# def test_create_path_existing_keys():
-#     r = odict(key="hello")
+def test_create_path_existing_keys():
+    r = odict(key="hello")
 
-#     more = _create_path(r, odict, ["key", "subpath", "more"])
+    more = MonographComposer._create_path(r, odict, ["key", "subpath", "more"])
 
-#     assert r == odict[
-#         "key": odict[
-#             "subpath": odict[
-#                 "more": odict()
-#             ]
-#         ]
-#     ]
+    assert r == odict[
+        "key": odict[
+            "subpath": odict[
+                "more": odict()
+            ]
+        ]
+    ]
 
-#     more["asd"] = "val"
-#     assert more["asd"] == r["key"]["subpath"]["more"]["asd"]
+    more["asd"] = "val"
+    assert more["asd"] == r["key"]["subpath"]["more"]["asd"]
+
+
+def test_assign_pattern():
+    r = odict(key="hello")
+
+    MonographComposer._assign_pattern(r, "otherkey", False)
+
+    assert r == odict(key="hello")
+
+    MonographComposer._assign_pattern(r, "otherkey", "hi")
+
+    assert r == odict[
+        "key": "hello",
+        "otherkey": "hi"
+    ]
