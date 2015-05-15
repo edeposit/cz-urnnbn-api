@@ -4,8 +4,8 @@
 # Interpreter version: python 2.7
 #
 """
-This module contains convertors for converting MODS to XML required by URN:NBN
-project.
+This module contains composers to allow creation of XML for URN:NBN, so you
+don't have to create XML by hand.
 
 See:
     - http://resolver.nkp.cz/api/v3/digDocRegistration.xsd
@@ -19,6 +19,9 @@ from odictliteral import odict
 
 # Functions & classes =========================================================
 class MonographComposer(object):
+    """
+    Compostition class for Monograph publications.
+    """
     def __init__(self, **kwargs):
         self.title = None
         self.subtitle = None
@@ -36,6 +39,9 @@ class MonographComposer(object):
         self._kwargs_to_attributes(kwargs)
 
     def _kwargs_to_attributes(self, kwargs):
+        """
+        Put keys from `kwargs` to `self`, if the keys are already there.
+        """
         for key, val in kwargs.iteritems():
             if key in self.__dict__:
                 self.__dict__[key] = val
@@ -69,16 +75,41 @@ class MonographComposer(object):
 
     @staticmethod
     def _assign_pattern(where, key, what):
+        """
+        If `what`, assign `what` into ``where[key]``.
+
+        Args:
+            where (dict): Dith onto which the assingment action is performed.
+            key (str): Definition of key for `where`.
+            what (any): Any value. If evaluated to true, assign it to `where`.
+        """
         if what:
             where[key] = what
 
-    def _add_identifier_to_mono(self, mono_root, identifier, out=None):
+    def _add_identifier(self, mono_root, identifier, out=None):
+        """
+        Look for `identifier` in `self`. If found, add it to `mono_root` as
+        `r:identifier`, or `r:out` if `out` is set. If not found, do nothing.
+
+        Args:
+            mono_root (dict): Dict into which you wish to add the `identifier`.
+            identifier (str): Name of the attribute in `self`.
+            out (str, default None): Optional argument to specify name of the
+                key into which the `identifier` will be put.
+        """
         out = out if out is not None else identifier
 
         if hasattr(self, identifier) and getattr(self, identifier) is not None:
             mono_root["r:" + out] = getattr(self, identifier)
 
     def to_xml_dict(self):
+        """
+        Compose hierarchical structure from ordered dicts, which will hold the
+        XML.
+
+        Returns:
+            odict: Structure from ordered dicts.
+        """
         root = odict[
             "r:import": odict[
                 "@xmlns:r": "http://resolver.nkp.cz/v3/",
@@ -99,9 +130,9 @@ class MonographComposer(object):
         )
 
         # handle ccnb, isbn, uuid
-        self._add_identifier_to_mono(mono_root, "ccnb")
-        self._add_identifier_to_mono(mono_root, "isbn")
-        self._add_identifier_to_mono(mono_root, "other_id", out="otherId")
+        self._add_identifier(mono_root, "ccnb")
+        self._add_identifier(mono_root, "isbn")
+        self._add_identifier(mono_root, "other_id", out="otherId")
 
         # add form of the book
         MonographComposer._assign_pattern(
@@ -164,6 +195,9 @@ class MonographComposer(object):
 
 
 class MultiMonoComposer(MonographComposer):
+    """
+    Composition class for Multi monograph XMLs for URN:NBN.
+    """
     def __init__(self, **kwargs):
         self.volume_title = None
 
@@ -172,12 +206,25 @@ class MultiMonoComposer(MonographComposer):
 
     @staticmethod
     def _swap_keys(ordered_dict, old_key, new_key):
+        """
+        Swap `old_key` for `new_key`, but keep in mind position of key in
+        `ordered_dict`.
+
+        Returns:
+            odict: Ordered dict with swapped keys.
+        """
         return odict(
             (new_key, val) if key == old_key else (key, val)
             for key, val in ordered_dict.iteritems()
         )
 
     def to_xml_dict(self):
+        """
+        Convert itself to XML string.
+
+        Returns:
+            str: XML.
+        """
         root = super(MultiMonoComposer, self).to_xml_dict()
 
         # same as mono, except that <r:monograph> is now <r:monographVolume>
