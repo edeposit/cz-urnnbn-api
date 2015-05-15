@@ -13,8 +13,8 @@ import pytest
 from odictliteral import odict
 
 import urn_nbn_api
-from urn_nbn_api.xml_composer import _create_path
 from urn_nbn_api.xml_composer import MonographComposer
+from urn_nbn_api.xml_composer import MultiMonoComposer
 # from urn_nbn_api.xml_composer import compose_mono_volume_xml
 
 
@@ -97,8 +97,25 @@ def test_mono_xml_without_invalid_parameter():
             azgabash="elektronický zdroj"
         )
 
-def test_mono_volume_xml_conversion(mono_mods_example, mono_vol_out_example):
-    out = MonographComposer(
+
+def test_swap_keys():
+    original = odict[
+        "somekey": "azgabash",
+        "oldkey": "something",
+        "another_key": "asd"
+    ]
+
+    new_dict = MultiMonoComposer._swap_keys(original, "oldkey", "newkey")
+
+    assert new_dict == odict[
+        "somekey": "azgabash",
+        "newkey": "something",
+        "another_key": "asd"
+    ]
+
+
+def test_mono_volume_xml_conversion(mono_vol_out_example):
+    out = MultiMonoComposer(
         title="Dračí doupě plus",
         ccnb="cnb001852175",
         isbn="978-80-85979-67-1",
@@ -110,10 +127,8 @@ def test_mono_volume_xml_conversion(mono_mods_example, mono_vol_out_example):
         place="Ostrava",
         year="2012",
         format="pdf",
+        volume_title="1",
     )
-
-    with open("asd.xml", "w") as f:
-        f.write(out.to_xml())
 
     assert out.to_xml() == mono_vol_out_example
 
