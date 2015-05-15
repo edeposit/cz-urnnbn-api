@@ -142,7 +142,7 @@ class MonographPublication(object):
         Returns:
             OrderedDict: XML parsed to ordered dicts.
         """
-        self.composer.titule = self.get_title()
+        self.composer.title = self.get_title()
         self.composer.subtitle = self.get_subtitle()
         self.composer.ccnb = self.get_ccnb()
         self.composer.isbn = self.get_isbn()
@@ -173,6 +173,7 @@ class MonographPublication(object):
         Returns:
             unicode: XML.
         """
+        self.compose()
         return self.composer.to_xml()
 
     def __str__(self):
