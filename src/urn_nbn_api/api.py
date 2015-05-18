@@ -14,6 +14,7 @@ import settings
 
 from api_structures import URN_NBN
 from api_structures import Registrar
+from api_structures import DigitalInstance
 
 
 # Functions & classes =========================================================
@@ -184,3 +185,12 @@ def register_document(xml, reg_code=settings.REG_CODE):
         registrar_code=urn_nbn_tag.get("registrarCode", None),
         digital_document_id=urn_nbn_tag.get("digitalDocumentId", None),
     )
+
+
+def get_gigital_instances(urn_nbn):
+    result = _send_request(
+        method="GET",
+        url=urljoin(settings.URL, "resolver/%s/digitalInstances") % urn_nbn
+    )
+
+    return DigitalInstance.from_xml(result)
