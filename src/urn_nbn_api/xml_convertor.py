@@ -32,6 +32,10 @@ class MonographPublication(object):
         return self.xdom["mods:mods"]["mods:titleInfo"]
 
     def get_title(self):
+        """
+        Returns:
+            str: Title
+        """
         title = self._get_title_info()["mods:title"]
 
         if type(title) in [tuple, list]:
@@ -40,6 +44,10 @@ class MonographPublication(object):
         return title
 
     def get_subtitle(self):
+        """
+        Returns:
+            str: Subtitle
+        """
         subtitle = self._get_title_info().get("mods:subTitle", None)
 
         if not subtitle:
@@ -51,6 +59,10 @@ class MonographPublication(object):
         return subtitle
 
     def get_author(self):
+        """
+        Returns:
+            str: Author's name.
+        """
         author = self.dom.match(
             "mods:mods",
             ["mods:name", {"type": "personal", "usage": "primary"}],
@@ -75,6 +87,10 @@ class MonographPublication(object):
         return author[0].getContent().decode("utf-8")
 
     def get_form(self):
+        """
+        Returns:
+            str: Form of the book. Electronic source, and so on..
+        """
         forms = self.dom.match(
             "mods:mods",
             "mods:physicalDescription",
@@ -92,6 +108,10 @@ class MonographPublication(object):
         return self.xdom["mods:mods"].get("mods:originInfo", None)
 
     def get_place(self):
+        """
+        Returns:
+            str: Place where the book was released.
+        """
         place = self.dom.match(
             "mods:originInfo",
             "mods:place",
@@ -103,18 +123,31 @@ class MonographPublication(object):
         return place[0].getContent().decode("utf-8")
 
     def get_publisher(self):
+        """
+        Returns:
+            str: Name of the publisher.
+        """
         if not self._get_description():
             return
 
         return self._get_description().get("mods:publisher", None)
 
     def get_year(self):
+        """
+        Returns:
+            str: Year when the book was released.
+        """
         if not self._get_description():
             return
 
         return self._get_description().get("mods:dateIssued", None)
 
     def get_identifier(self, name):
+        """
+        Returns:
+            str: Identifier from ``<mods:identifier>`` which has \
+                 ``@type == name``.
+        """
         identifier = filter(
             lambda x: x.get("@type", False) == name,
             self.xdom["mods:mods"].get("mods:identifier", [])
@@ -126,12 +159,24 @@ class MonographPublication(object):
         return identifier[0]["#text"]
 
     def get_ccnb(self):
+        """
+        Returns:
+            str: CCNB identification string.
+        """
         return self.get_identifier("ccnb")
 
     def get_isbn(self):
+        """
+        Returns:
+            str: ISBN.
+        """
         return self.get_identifier("isbn")
 
     def get_uuid(self):
+        """
+        Returns:
+            str: UUID.
+        """
         return self.get_identifier("uuid")
 
     def compose(self):
@@ -187,6 +232,10 @@ class MonographVolume(MonographPublication):
         self.composer = MultiMonoComposer()
 
     def get_volume_title(self):
+        """
+        Returns:
+            str: Title of the whole volume.
+        """
         title_info = self.dom.match(
             "mods:mods",
             "mods:titleInfo",
