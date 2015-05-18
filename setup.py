@@ -1,10 +1,15 @@
 #! /usr/bin/env python
 # -*- coding: utf-8 -*-
+#
+# Interpreter version: python 2.7
+#
+# Imports =====================================================================
 from setuptools import setup, find_packages
 
 from docs import getVersion
 
 
+# Variables ===================================================================
 changelog = open('CHANGES.rst').read()
 long_description = "\n\n".join([
     open('README.rst').read(),
@@ -13,6 +18,7 @@ long_description = "\n\n".join([
 ])
 
 
+# Actual setup definition =====================================================
 setup(
     name='cz-urnnbn-api',
     version=getVersion(changelog),
