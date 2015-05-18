@@ -16,9 +16,11 @@ import xmltodict
 
 from odictliteral import odict
 
+from api_structures import KwargObj
+
 
 # Functions & classes =========================================================
-class MonographComposer(object):
+class MonographComposer(KwargObj):
     """
     Compostition class for Monograph publications.
     """
@@ -38,27 +40,6 @@ class MonographComposer(object):
 
         self._all_set = True
         self._kwargs_to_attributes(kwargs)
-
-    def __setattr__(self, name, value):
-        """
-        Disable setting values which are not defined in ``.__init__()``.
-        """
-        if hasattr(self, "_all_set") and name not in self.__dict__:
-            raise ValueError("%s is not defined in this class!" % name)
-
-        self.__dict__[name] = value
-
-    def _kwargs_to_attributes(self, kwargs):
-        """
-        Put keys from `kwargs` to `self`, if the keys are already there.
-        """
-        for key, val in kwargs.iteritems():
-            if key in self.__dict__:
-                self.__dict__[key] = val
-            else:
-                raise ValueError(
-                    "Can't set %s parameter - it is not defined here!" % key
-                )
 
     @staticmethod
     def _create_path(root, dict_type, path):
