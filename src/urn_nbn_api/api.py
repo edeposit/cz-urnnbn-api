@@ -188,6 +188,16 @@ def register_document(xml, reg_code=settings.REG_CODE):
 
 
 def get_gigital_instances(urn_nbn):
+    """
+    Get list of :class:`.DigitalInstance` objects for given `urn_nbn`.
+
+    DigitalInstances are `pointers` to :class:`.DigitalLibrary`, where the
+    instance of document is stored. There should be always a link to the
+    document in ``url`` property.
+
+    Returns:
+        list: :class:`.DigitalInstance` objects or blank list.
+    """
     result = _send_request(
         method="GET",
         url=urljoin(settings.URL, "resolver/%s/digitalInstances") % urn_nbn
