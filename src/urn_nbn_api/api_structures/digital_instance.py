@@ -94,6 +94,15 @@ class DigitalInstance(KwargObj):
 
     @staticmethod
     def instance_from_xmldict(dict_tag):
+        """
+        Create DigitalInstance from nested dicts (result of xmltodict).
+
+        Args:
+            dict_tag (dict): Nested dicts.
+
+        Returns:
+            obj: :class:`DigitalInstance` object.
+        """
         return DigitalInstance(
             uid=dict_tag["@id"],
             active=dict_tag["@active"].lower() == "true",
@@ -107,6 +116,15 @@ class DigitalInstance(KwargObj):
 
     @staticmethod
     def from_xml(xml):
+        """
+        Parse `xml` string and DigitalInstances.
+
+        Args:
+            xml (str): Unicode/utf-8 XML.
+
+        Returns:
+            list: List of :class:`DigitalInstance` objects.
+        """
         xdom = xmltodict.parse(xml)
 
         di = xdom["response"]["digitalInstances"]
