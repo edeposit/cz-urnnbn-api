@@ -5,6 +5,7 @@
 #
 # Imports =====================================================================
 import xmltodict
+from odictliteral import odict
 
 from tools import both_set_and_different
 from kwarg_obj import KwargObj
@@ -19,18 +20,18 @@ class DigitalInstance(KwargObj):
     Atrributes:
         uid (str): ID of the library.
         url (str): URL of the library.
-        active (bool): Is the record active?
         digital_library_id (str): Id of the digitial library.
-        created (str): ISO 8601 string with date.
-        deactivated (str) ISO 8601 string with date.
-        format (str): Format of the book. ``jpg;pdf`` for example.
-        accessibility (str): Free description of accessibility.
+        active (bool, def. None): Is the record active?
+        created (str, def. None): ISO 8601 string with date.
+        deactivated (str, def. None) ISO 8601 string with date.
+        format (str, def. None): Format of the book. ``jpg;pdf`` for example.
+        accessibility (str, def. None): Free description of accessibility.
     """
-    def __init__(self, uid, active, url, digital_library_id, **kwargs):
-        self.uid = uid
-        self.active = active
+    def __init__(self, url, digital_library_id, **kwargs):
         self.url = url
         self.digital_library_id = digital_library_id
+        self.uid = None
+        self.active = None
         self.format = None
         self.created = None
         self.accessibility = None
@@ -58,6 +59,38 @@ class DigitalInstance(KwargObj):
 
     def __ne__(self, other):
         return not self.__eq__(other)
+
+    def to_xml(self):
+        """
+        Convert self to XML, which can be send to API to register new digital
+        instance.
+
+        Returns:
+            str: UTF-8 encoded string with XML representation.
+
+        Raises:
+            AssertionError: If :attr:`url` or :attr:`digital_library_id` is \
+                            not set.
+        """
+        assert self.url, "You have to set .url!"
+        assert self.digital_library_id, "You have to set .digital_library_id!"
+
+        root = odict[
+            "digitalInstance": odict[
+                "@xmlns": "http://resolver.nkp.cz/v3/",
+                "url": self.url,
+                "digitalLibraryId": self.digital_library_id,
+                "format": self.format,
+                "accessibility": self.accessibility,
+            ]
+        ]
+
+        if not self.format:
+            del root["digitalInstance"]["format"]
+        if not self.accessibility:
+            del root["digitalInstance"]["accessibility"]
+
+        return xmltodict.unparse(root, pretty=True).encode("utf-8")
 
     @staticmethod
     def instance_from_xmldict(dict_tag):
