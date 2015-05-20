@@ -69,3 +69,41 @@ def test_from_xml_no_dig_instance(no_dig_inst_xml):
     res = DigitalInstance.from_xml(no_dig_inst_xml)
 
     assert res == []
+
+
+def test_to_xml():
+    di = DigitalInstance(
+        url="http://kramerius3.mzk.cz/kramerius/handle/BOA001/935239",
+        digital_library_id="4",
+        format="jpg;pdf",
+        accessibility="volně přístupné",
+    )
+
+    assert di.to_xml() == """<?xml version="1.0" encoding="utf-8"?>
+<digitalInstance xmlns="http://resolver.nkp.cz/v3/">
+\t<url>http://kramerius3.mzk.cz/kramerius/handle/BOA001/935239</url>
+\t<digitalLibraryId>4</digitalLibraryId>
+\t<format>jpg;pdf</format>
+\t<accessibility>volně přístupné</accessibility>
+</digitalInstance>""".encode("utf-8")
+
+
+def test_to_xml_only_required_arguments():
+    di = DigitalInstance(
+        url="http://kramerius3.mzk.cz/kramerius/handle/BOA001/935239",
+        digital_library_id="4",
+    )
+
+    assert di.to_xml() == """<?xml version="1.0" encoding="utf-8"?>
+<digitalInstance xmlns="http://resolver.nkp.cz/v3/">
+\t<url>http://kramerius3.mzk.cz/kramerius/handle/BOA001/935239</url>
+\t<digitalLibraryId>4</digitalLibraryId>
+</digitalInstance>""".encode("utf-8")
+
+
+def test_to_xml_required_arguments_are_really_required():
+    with pytest.raises(AssertionError):
+        DigitalInstance(url="4", digital_library_id=None).to_xml()
+
+    with pytest.raises(AssertionError):
+        DigitalInstance(url=None, digital_library_id="4").to_xml()
