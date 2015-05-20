@@ -204,3 +204,52 @@ def get_gigital_instances(urn_nbn):
     )
 
     return DigitalInstance.from_xml(result)
+
+
+def register_digital_instance_obj(urn_nbn, digital_instance):
+    """
+    Register `digital_instance` object as new digital instance of the
+    document for given `urn_nbn`
+
+    Args:
+        urn_nbn (str): URN:NBN identifier of registered document.
+        digital_instance (obj): :class:`DigitalInstance` instance.
+
+    Returns:
+        obj: :class:`DigitalInstance` with more informations.
+    """
+    assert isinstance(digital_instance, DigitalInstance)
+
+    result = _send_request(
+        method="POST",
+        url=urljoin(settings.URL, "resolver/%s/digitalInstances") % urn_nbn,
+        data=digital_instance.to_xml()
+    )
+
+    return DigitalInstance.from_xml(result)[0]
+
+
+def register_digital_instance(urn_nbn, url, digital_library_id, format=None,
+                              accessibility=None):
+    """
+    Compose and register new digital instance of document.
+
+    Args:
+        urn_nbn (str): URN:NBN identifier of registered document.
+        url (str): URL of the digital instance.
+        digital_library_id (str): ID of the digital library.
+        format (str, def. None): Format of the instance - ``pdf`` for example.
+        accessibility (str, def. None): Is the registration neccessary to \
+                      access this instance?
+
+    Returns:
+        obj: :class:`DigitalInstance` with more informations.
+    """
+    di = DigitalInstance(
+        url=url,
+        digital_library_id=digital_library_id,
+        format=format,
+        accessibility=accessibility
+    )
+
+    return register_digital_instance_obj(urn_nbn, di)
