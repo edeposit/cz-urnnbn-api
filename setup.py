@@ -30,9 +30,17 @@ setup(
     author_email='edeposit@email.cz',
 
     classifiers=[
+        "Development Status :: 3 - Alpha",
+
+        "Programming Language :: Python",
         "Programming Language :: Python :: 2.7",
-        "License :: OSI Approved :: GNU General Public License v2 or later (GPLv2+)",
-        "Topic :: Software Development :: Libraries :: Python Modules"
+
+        "Intended Audience :: Developers",
+        "Topic :: Software Development :: Libraries",
+        "Topic :: Software Development :: Libraries :: Python Modules",
+        "Topic :: Communications :: File Sharing",
+
+        "License :: OSI Approved :: MIT License",
     ],
     license='GPL2+',
 
