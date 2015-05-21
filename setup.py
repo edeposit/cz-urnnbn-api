@@ -10,20 +10,21 @@ from docs import getVersion
 
 
 # Variables ===================================================================
-changelog = open('CHANGES.rst').read()
-long_description = "\n\n".join([
+CHANGELOG = open('CHANGES.rst').read()
+LONG_DESCRIPTION = "\n\n".join([
     open('README.rst').read(),
     open('CONTRIBUTORS.rst').read(),
-    changelog
+    CHANGELOG
 ])
+URL = "https://resolver.nkp.cz"
 
 
 # Actual setup definition =====================================================
 setup(
     name='cz-urnnbn-api',
-    version=getVersion(changelog),
-    description="API for the Czech URN:NBN resolver (https://resolver.nkp.cz).",
-    long_description=long_description,
+    version=getVersion(CHANGELOG),
+    description="API for the Czech URN:NBN resolver (%s)." % URL,
+    long_description=LONG_DESCRIPTION,
     url='https://github.com/edeposit/cz-urnnbn-api/',
 
     author='Edeposit team',
@@ -42,7 +43,7 @@ setup(
 
         "License :: OSI Approved :: MIT License",
     ],
-    license='GPL2+',
+    license='MIT',
 
     packages=find_packages('src'),
     package_dir={'': 'src'},
