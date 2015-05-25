@@ -78,6 +78,10 @@ class MonographComposer(KwargsObj):
         if what:
             where[key] = what
 
+    def _check_required_fields(self):
+        assert self.title
+        assert self.format
+
     def _add_identifier(self, mono_root, identifier, out=None):
         """
         Look for `identifier` in `self`. If found, add it to `mono_root` as
@@ -102,6 +106,8 @@ class MonographComposer(KwargsObj):
         Returns:
             odict: Structure from ordered dicts.
         """
+        self._check_required_fields()
+
         root = odict[
             "r:import": odict[
                 "@xmlns:r": "http://resolver.nkp.cz/v3/",
@@ -209,6 +215,10 @@ class MultiMonoComposer(MonographComposer):
             (new_key, val) if key == old_key else (key, val)
             for key, val in ordered_dict.iteritems()
         )
+
+    def _check_required_fields(self):
+        assert self.volume_title
+        super(MultiMonoComposer, self)._check_required_fields()
 
     def to_xml_dict(self):
         """
