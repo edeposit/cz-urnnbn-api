@@ -11,7 +11,11 @@ import xmltodict
 import dhtmlparser
 
 import settings
+from xml_composer import MonographComposer
 
+from api_structures import *  # this is here to simplify working with API
+
+# those are actually used in this module
 from api_structures import URN_NBN
 from api_structures import Registrar
 from api_structures import DigitalInstance
@@ -152,6 +156,25 @@ def get_registrar_info(reg_code):
     return Registrar.from_xml_ordereddict(reg_tag)
 
 
+def register_document_obj(xml_composer, reg_code=settings.REG_CODE):
+    """
+    Register document in mode ``BY_RESOLVER`` - let the resolver give you
+    URN:NBN code.
+
+    Args:
+        xml_composer (obj): Instance of the :class:`MonographComposer`.
+        reg_code (str, default settings.REG_CODE): Registrar's code.
+
+    Returns:
+        obj: Instance of :class:`.URN_NBN` which contains assinged URN:NBN \
+             code.
+    """
+    msg = "`xml_composer` parameter have to by subclass of MonographComposer!"
+    assert isinstance(xml_composer, MonographComposer), msg
+
+    return register_document(xml_composer.to_xml(), reg_code)
+
+
 def register_document(xml, reg_code=settings.REG_CODE):
     """
     Register document in mode ``BY_RESOLVER`` - let the resolver give you
@@ -160,7 +183,6 @@ def register_document(xml, reg_code=settings.REG_CODE):
     Args:
         xml (str): XML, which will be used for registration. See
                    :mod:`xml_composer` for details.
-
         reg_code (str, default settings.REG_CODE): Registrar's code.
 
     Returns:
