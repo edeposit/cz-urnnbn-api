@@ -2,6 +2,7 @@
 #
 export PYTHONPATH="src:$PYTHONPATH"
 export TEST_PATH="tests"
+export ARGS=`echo $@ | sed 's/\-a//g;s/\-i//g;s/\-u//g'`
 
 function show_help {
     echo -e "Usage: $0 [-h] [-a] [-i] [-u]"
@@ -24,12 +25,12 @@ function run_all_tests {
 }
 
 function run_int_tests {
-    py.test "$TEST_PATH/integration" $@;
+    py.test "$TEST_PATH/integration" $ARGS;
     exit
 }
 
 function run_unit_tests {
-    py.test "$TEST_PATH/unit" $@;
+    py.test "$TEST_PATH/unit" $ARGS;
     exit
 }
 
