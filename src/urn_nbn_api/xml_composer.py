@@ -15,12 +15,11 @@ See:
 import xmltodict
 
 from odictliteral import odict
-
-from api_structures import KwargObj
+from kwargs_obj import KwargsObj
 
 
 # Functions & classes =========================================================
-class MonographComposer(KwargObj):
+class MonographComposer(KwargsObj):
     """
     Compostition class for Monograph publications.
     """

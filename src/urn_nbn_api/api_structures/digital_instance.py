@@ -6,13 +6,13 @@
 # Imports =====================================================================
 import xmltodict
 from odictliteral import odict
+from kwargs_obj import KwargsObj
 
 from tools import both_set_and_different
-from kwarg_obj import KwargObj
 
 
 # Functions & classes =========================================================
-class DigitalInstance(KwargObj):
+class DigitalInstance(KwargsObj):
     """
     Container used to hold informations about instances of the documents in
     digital library - this is pointer to document in digital library.

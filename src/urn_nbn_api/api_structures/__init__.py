@@ -7,7 +7,6 @@
 from modes import Modes
 from catalog import Catalog
 from urn_nbn import URN_NBN
-from kwarg_obj import KwargObj
 from registrar import Registrar
 from digital_library import DigitalLibrary
 from digital_instance import DigitalInstance
