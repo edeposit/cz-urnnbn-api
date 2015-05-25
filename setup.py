@@ -48,20 +48,14 @@ setup(
     packages=find_packages('src'),
     package_dir={'': 'src'},
 
-    # scripts=[''],
-
-    namespace_packages=['edeposit', 'edeposit.amqp'],
     include_package_data=True,
     zip_safe=False,
-    install_requires=[
-        'setuptools',
-        "xmltodict",
-        "pydhtmlparser>=2.0.9",
-        "odictliteral",
-    ],
+
+    install_requires=open("requirements.txt").read().splitlines(),
     extras_require={
         "test": [
-            "pytest"
+            "pytest",
+            "fake-factory"
         ],
         "docs": [
             "sphinx",
