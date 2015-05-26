@@ -54,5 +54,8 @@ def test_register_document_obj():
     )
 
     assert str(urn_nbn)
+    assert urn_nbn == api.get_urn_nbn_info(urn_nbn)
 
-    assert api.get_gigital_instances(urn_nbn) == []
+    assert api.get_digital_instances(urn_nbn) == []
+
+    assert False

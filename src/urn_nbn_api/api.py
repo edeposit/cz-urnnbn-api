@@ -98,7 +98,7 @@ def _get_content_or_str(tag, alt="", pick=lambda x: x[0]):
 # API =========================================================================
 def is_valid_reg_code(reg_code=settings.REG_CODE):
     """
-    Check whether `reg_code` is valid registration code.
+    Check whether `reg_code` is valid registrar code.
 
     Args:
         reg_code (str): Producent's registration code.
@@ -119,7 +119,7 @@ def is_valid_reg_code(reg_code=settings.REG_CODE):
 
 def iter_registrars():
     """
-    Iterate thru all registrars.
+    Iterate over all registrars.
 
     Yields:
         obj: :class:`.Registrar` instance with basic informations.
@@ -132,7 +132,7 @@ def iter_registrars():
     xdom = xmltodict.parse(data)
 
     for registrar_tag in xdom["response"]["registrars"]["registrar"]:
-        yield Registrar.from_xml_ordereddict(registrar_tag)
+        yield Registrar.from_xmldict(registrar_tag)
 
 
 def get_registrar_info(reg_code):
@@ -153,7 +153,7 @@ def get_registrar_info(reg_code):
     xdom = xmltodict.parse(data)
     reg_tag = xdom["response"]["registrar"]
 
-    return Registrar.from_xml_ordereddict(reg_tag)
+    return Registrar.from_xmldict(reg_tag)
 
 
 def register_document_obj(xml_composer, reg_code=settings.REG_CODE):
@@ -195,37 +195,9 @@ def register_document(xml, reg_code=settings.REG_CODE):
         data=xml
     )
 
-    xdom = xmltodict.parse(result)
-    urn_nbn_tag = xdom["response"]["urnNbn"]
-
-    return URN_NBN(
-        value=urn_nbn_tag["value"],
-        status=urn_nbn_tag["status"],
-        registered=urn_nbn_tag.get("registered", None),
-        country_code=urn_nbn_tag.get("countryCode", None),
-        document_code=urn_nbn_tag.get("documentCode", None),
-        registrar_code=urn_nbn_tag.get("registrarCode", None),
-        digital_document_id=urn_nbn_tag.get("digitalDocumentId", None),
+    return URN_NBN.from_xmldict(
+        xmltodict.parse(result)
     )
-
-
-def get_gigital_instances(urn_nbn):
-    """
-    Get list of :class:`.DigitalInstance` objects for given `urn_nbn`.
-
-    DigitalInstances are `pointers` to :class:`.DigitalLibrary`, where the
-    instance of document is stored. There should be always a link to the
-    document in ``url`` property.
-
-    Returns:
-        list: :class:`.DigitalInstance` objects or blank list.
-    """
-    result = _send_request(
-        method="GET",
-        url=urljoin(settings.URL, "resolver/%s/digitalInstances") % urn_nbn
-    )
-
-    return DigitalInstance.from_xml(result)
 
 
 def register_digital_instance_obj(urn_nbn, digital_instance):
@@ -275,3 +247,43 @@ def register_digital_instance(urn_nbn, url, digital_library_id, format=None,
     )
 
     return register_digital_instance_obj(urn_nbn, di)
+
+
+def get_digital_instances(urn_nbn):
+    """
+    Get list of :class:`.DigitalInstance` objects for given `urn_nbn`.
+
+    DigitalInstances are `pointers` to :class:`.DigitalLibrary`, where the
+    instance of document is stored. There should be always a link to the
+    document in ``url`` property.
+
+    Returns:
+        list: :class:`.DigitalInstance` objects or blank list.
+    """
+    result = _send_request(
+        method="GET",
+        url=urljoin(settings.URL, "resolver/%s/digitalInstances") % urn_nbn
+    )
+
+    return DigitalInstance.from_xml(result)
+
+
+def get_urn_nbn_info(urn_nbn):
+    result = _send_request(
+        method="GET",
+        url=urljoin(settings.URL, "urnnbn/%s") % urn_nbn
+    )
+
+    return URN_NBN.from_xmldict(
+        xmltodict.parse(result)
+    )
+
+
+def get_full_urn_nbn_record(urn_nbn):
+    nbn_url = "resolver/%s?action=show&format=xml" % urn_nbn
+    result = _send_request(
+        method="GET",
+        url=urljoin(settings.URL, nbn_url)
+    )
+
+    return result #DigitalInstance.from_xml(result)
