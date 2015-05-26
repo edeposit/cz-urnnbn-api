@@ -10,7 +10,7 @@ from docs import getVersion
 
 
 # Variables ===================================================================
-CHANGELOG = open('CHANGES.rst').read()
+CHANGELOG = open('CHANGELOG.rst').read()
 LONG_DESCRIPTION = "\n\n".join([
     open('README.rst').read(),
     open('CONTRIBUTORS.rst').read(),
