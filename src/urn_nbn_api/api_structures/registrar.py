@@ -71,7 +71,7 @@ class Registrar(object):
         return not self.__eq__(other)
 
     @staticmethod
-    def from_xml_ordereddict(reg_tag):
+    def from_xmldict(reg_tag):
         """
         Parse basic information about registrar.
 
@@ -89,7 +89,7 @@ class Registrar(object):
             description=reg_tag.get("description", None),
             created=reg_tag["created"],
             modified=reg_tag.get("modified", None),
-            modes=Modes.from_xml_ordereddict(
+            modes=Modes.from_xmldict(
                 reg_tag["registrationModes"]["mode"]
             )
         )

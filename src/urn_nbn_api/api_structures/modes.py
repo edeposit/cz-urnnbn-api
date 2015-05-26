@@ -69,7 +69,7 @@ class Modes(object):
         )
 
     @staticmethod
-    def from_xml_ordereddict(modes_tag):
+    def from_xmldict(modes_tag):
         """
         Parse Modes information from XML.
 
