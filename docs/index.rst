@@ -16,7 +16,7 @@ cz-urnnbn-api
 
 ``cz-urnnbn-api`` is Python package used to work with czech URN\:NBN resolver. It allows you to register documents, add new digital instances and resolve strings back to URL of systems, where the document is stored.
 
-Note:
+Warning:
     The package is not 100% complete, because complex nature of the API and because it was created for E-deposit_ project, which doesn't require 100% functionality. Package is opensource, and pull requests are welcomed.
 
 .. _E-deposit: http://edeposit.nkp.cz/
@@ -45,34 +45,29 @@ Relations of the classes in project:
 API
 ---
 
-:doc:`/api/marcxml_parser`:
+:doc:`/api/urn_nbn_api`:
 
 .. toctree::
     :maxdepth: 1
 
-    /api/parser.rst
-    /api/serializer.rst
-    /api/query.rst
-    /api/record.rst
+    /api/api.rst
+    /api/settings.rst
+    /api/xml_composer.rst
+    /api/xml_convertor.rst
 
 
-:doc:`/api/structures/structures`:
-
-.. toctree::
-    :maxdepth: 1
-
-    /api/structures/person.rst
-    /api/structures/corporation.rst
-    /api/structures/marcsubrecord.rst
-    /api/structures/publication_type.rst
-
-
-:doc:`/api/tools/tools`:
+:doc:`/api/api_structures/api_structures`:
 
 .. toctree::
     :maxdepth: 1
 
-    /api/tools/resorted.rst
+    /api/api_structures/catalog.rst
+    /api/api_structures/digital_instance.rst
+    /api/api_structures/digital_library.rst
+    /api/api_structures/modes.rst
+    /api/api_structures/registrar.rst
+    /api/api_structures/urn_nbn.rst
+    /api/api_structures/tools.rst
 
 Usage example
 -------------
