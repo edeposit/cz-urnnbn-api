@@ -289,10 +289,22 @@ def get_urn_nbn_info(urn_nbn):
 
 
 def get_full_urn_nbn_record(urn_nbn):
+    """
+    Return full record for given `urn_nbn`.
+
+    Warning:
+        This function doesn't yet return ORM data, just plain string.
+
+    Args:
+        urn_nbn (str): String.
+
+    Returns:
+        str: XML with full informations about URN:NBN record.
+    """
     nbn_url = "resolver/%s?action=show&format=xml" % urn_nbn
     result = _send_request(
         method="GET",
         url=urljoin(settings.URL, nbn_url)
     )
 
-    return result  # DigitalInstance.from_xml(result)
+    return result  # TODO: create ORM for the XML
