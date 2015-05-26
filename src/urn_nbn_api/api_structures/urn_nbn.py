@@ -47,3 +47,17 @@ class URN_NBN(str):
 
     def __repr__(self):
         return self.value
+
+    @staticmethod
+    def from_xmldict(xdom, tag_picker=lambda x: x["response"]["urnNbn"]):
+        urn_nbn_tag = tag_picker(xdom)
+
+        return URN_NBN(
+            value=urn_nbn_tag["value"],
+            status=urn_nbn_tag["status"],
+            registered=urn_nbn_tag.get("registered", None),
+            country_code=urn_nbn_tag.get("countryCode", None),
+            document_code=urn_nbn_tag.get("documentCode", None),
+            registrar_code=urn_nbn_tag.get("registrarCode", None),
+            digital_document_id=urn_nbn_tag.get("digitalDocumentId", None),
+        )
