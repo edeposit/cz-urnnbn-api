@@ -79,6 +79,9 @@ class MonographComposer(KwargsObj):
             where[key] = what
 
     def _check_required_fields(self):
+        """
+        Make sure that all required fields are present.
+        """
         assert self.title
         assert self.format
 
@@ -217,6 +220,9 @@ class MultiMonoComposer(MonographComposer):
         )
 
     def _check_required_fields(self):
+        """
+        Make sure that all required fields are present.
+        """
         assert self.volume_title
         super(MultiMonoComposer, self)._check_required_fields()
 

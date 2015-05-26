@@ -269,6 +269,15 @@ def get_digital_instances(urn_nbn):
 
 
 def get_urn_nbn_info(urn_nbn):
+    """
+    For given `urn_nbn` string, return parsed :class:`URN_NBN` object.
+
+    Args:
+        urn_nbn (str): String.
+
+    Return:
+        obj: :class:`URN_NBN` object with additional info in properties.
+    """
     result = _send_request(
         method="GET",
         url=urljoin(settings.URL, "urnnbn/%s") % urn_nbn
@@ -286,4 +295,4 @@ def get_full_urn_nbn_record(urn_nbn):
         url=urljoin(settings.URL, nbn_url)
     )
 
-    return result #DigitalInstance.from_xml(result)
+    return result  # DigitalInstance.from_xml(result)
