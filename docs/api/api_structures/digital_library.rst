@@ -1,7 +1,9 @@
-urn_nbn_api.api_structures.digital_library module
-=================================================
+DigitalLibrary structure
+========================
 
-.. automodule:: urn_nbn_api.api_structures.digital_library
+Structure for representing informations about Digital libraries.
+
+.. automodule:: cz_urnnbn_api.api_structures.digital_library
     :members:
     :undoc-members:
     :show-inheritance:

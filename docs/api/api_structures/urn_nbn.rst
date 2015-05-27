@@ -1,7 +1,7 @@
-urn_nbn_api.api_structures.urn_nbn module
-=========================================
+URN_NBN structure
+=================
 
-.. automodule:: urn_nbn_api.api_structures.urn_nbn
+.. automodule:: cz_urnnbn_api.api_structures.urn_nbn
     :members:
     :undoc-members:
     :show-inheritance:

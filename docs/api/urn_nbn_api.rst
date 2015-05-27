@@ -1,27 +1,20 @@
-urn_nbn_api package
+cz_urnnbn_api package
 ===================
 
-Subpackages
------------
+Subpackage
+----------
 
 .. toctree::
 
-    urn_nbn_api.api_structures
+    /api/api_structures/api_structures
 
 Submodules
 ----------
 
 .. toctree::
 
-   urn_nbn_api.api
-   urn_nbn_api.settings
-   urn_nbn_api.xml_composer
-   urn_nbn_api.xml_convertor
+   /api/api
+   /api/settings
+   /api/xml_composer
+   /api/xml_convertor
 
-Module contents
----------------
-
-.. automodule:: urn_nbn_api
-    :members:
-    :undoc-members:
-    :show-inheritance:

@@ -1,7 +1,7 @@
-urn_nbn_api.xml_composer module
-===============================
+xml_composer submodule
+======================
 
-.. automodule:: urn_nbn_api.xml_composer
+.. automodule:: cz_urnnbn_api.xml_composer
     :members:
     :undoc-members:
     :show-inheritance:

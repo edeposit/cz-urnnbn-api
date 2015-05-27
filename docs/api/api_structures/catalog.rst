@@ -1,7 +1,7 @@
-urn_nbn_api.api_structures.catalog module
-=========================================
+Catalog structure
+=================
 
-.. automodule:: urn_nbn_api.api_structures.catalog
+.. automodule:: cz_urnnbn_api.api_structures.catalog
     :members:
     :undoc-members:
     :show-inheritance:

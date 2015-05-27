@@ -1,7 +1,7 @@
-urn_nbn_api.xml_convertor module
-================================
+xml_convertor submodule
+=======================
 
-.. automodule:: urn_nbn_api.xml_convertor
+.. automodule:: cz_urnnbn_api.xml_convertor
     :members:
     :undoc-members:
     :show-inheritance:

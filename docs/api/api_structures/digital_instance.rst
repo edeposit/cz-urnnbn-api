@@ -1,7 +1,7 @@
-urn_nbn_api.api_structures.digital_instance module
-==================================================
+DigitalInstance structure
+=========================
 
-.. automodule:: urn_nbn_api.api_structures.digital_instance
+.. automodule:: cz_urnnbn_api.api_structures.digital_instance
     :members:
     :undoc-members:
     :show-inheritance:

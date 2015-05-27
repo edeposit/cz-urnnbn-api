@@ -1,7 +1,9 @@
-urn_nbn_api.api module
-======================
+api submodule
+=============
 
-.. automodule:: urn_nbn_api.api
+Functions for interaction with URN\:NBN API.
+
+.. automodule:: cz_urnnbn_api.api
     :members:
     :undoc-members:
     :show-inheritance:

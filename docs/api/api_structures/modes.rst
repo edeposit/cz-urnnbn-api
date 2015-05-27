@@ -1,7 +1,7 @@
-urn_nbn_api.api_structures.modes module
-=======================================
+Modes structure
+===============
 
-.. automodule:: urn_nbn_api.api_structures.modes
+.. automodule:: cz_urnnbn_api.api_structures.modes
     :members:
     :undoc-members:
     :show-inheritance:

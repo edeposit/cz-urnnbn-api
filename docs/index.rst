@@ -51,9 +51,9 @@ API
     :maxdepth: 1
 
     /api/api.rst
-    /api/settings.rst
     /api/xml_composer.rst
     /api/xml_convertor.rst
+    /api/settings.rst
 
 
 :doc:`/api/api_structures/api_structures`:
@@ -67,6 +67,10 @@ API
     /api/api_structures/modes.rst
     /api/api_structures/registrar.rst
     /api/api_structures/urn_nbn.rst
+
+.. toctree::
+    :maxdepth: 1
+
     /api/api_structures/tools.rst
 
 Usage example

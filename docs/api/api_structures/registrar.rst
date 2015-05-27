@@ -1,7 +1,7 @@
-urn_nbn_api.api_structures.registrar module
-===========================================
+Registrar structure
+===================
 
-.. automodule:: urn_nbn_api.api_structures.registrar
+.. automodule:: cz_urnnbn_api.api_structures.registrar
     :members:
     :undoc-members:
     :show-inheritance:

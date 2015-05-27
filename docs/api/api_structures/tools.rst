@@ -1,7 +1,9 @@
-urn_nbn_api.api_structures.tools module
-=======================================
+tools submodule
+===============
 
-.. automodule:: urn_nbn_api.api_structures.tools
+Useful functions used by multiple structures.
+
+.. automodule:: cz_urnnbn_api.api_structures.tools
     :members:
     :undoc-members:
     :show-inheritance:
