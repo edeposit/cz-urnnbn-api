@@ -8,8 +8,8 @@ from __future__ import unicode_literals
 
 import pytest
 
-from urn_nbn_api import api
-from urn_nbn_api import api_structures
+from cz_urnnbn_api import api
+from cz_urnnbn_api import api_structures
 
 from test_xml_composer import data_context
 from test_xml_composer import mono_out_example

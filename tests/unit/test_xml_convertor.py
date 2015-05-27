@@ -8,8 +8,8 @@ import os
 
 import pytest
 
-from urn_nbn_api.xml_convertor import convert_mono_xml
-from urn_nbn_api.xml_convertor import convert_mono_volume_xml
+from cz_urnnbn_api.xml_convertor import convert_mono_xml
+from cz_urnnbn_api.xml_convertor import convert_mono_volume_xml
 
 from test_xml_composer import data_context
 from test_xml_composer import mono_out_example

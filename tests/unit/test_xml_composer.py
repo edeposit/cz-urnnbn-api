@@ -12,9 +12,9 @@ import sys
 import pytest
 from odictliteral import odict
 
-import urn_nbn_api
-from urn_nbn_api.xml_composer import MonographComposer
-from urn_nbn_api.xml_composer import MultiMonoComposer
+import cz_urnnbn_api
+from cz_urnnbn_api.xml_composer import MonographComposer
+from cz_urnnbn_api.xml_composer import MultiMonoComposer
 
 
 # Functions & classes =========================================================

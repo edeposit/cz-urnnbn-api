@@ -6,7 +6,7 @@
 # Imports =====================================================================
 import pytest
 
-from urn_nbn_api.api_structures import Modes
+from cz_urnnbn_api.api_structures import Modes
 
 
 # Tests =======================================================================

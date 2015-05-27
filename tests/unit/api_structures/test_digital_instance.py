@@ -8,7 +8,7 @@ from __future__ import unicode_literals
 
 import pytest
 
-from urn_nbn_api.api_structures import DigitalInstance
+from cz_urnnbn_api.api_structures import DigitalInstance
 
 from ..test_xml_composer import data_context
 

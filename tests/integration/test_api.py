@@ -7,9 +7,9 @@
 import pytest
 import faker  # fake-factory module
 
-from urn_nbn_api import api
-from urn_nbn_api import settings
-from urn_nbn_api import MonographComposer
+from cz_urnnbn_api import api
+from cz_urnnbn_api import settings
+from cz_urnnbn_api import MonographComposer
 
 
 # Variables ===================================================================

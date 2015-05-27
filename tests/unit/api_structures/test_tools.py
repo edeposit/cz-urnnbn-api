@@ -6,7 +6,7 @@
 # Imports =====================================================================
 import pytest
 
-from urn_nbn_api.api_structures import tools
+from cz_urnnbn_api.api_structures import tools
 
 
 # Tests =======================================================================
