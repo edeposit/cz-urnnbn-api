@@ -5,7 +5,7 @@ Python API for czech `URN:NBN resolver <https://resolver.nkp.cz/>`_ (`documentat
 
 What is URN\:NBN
 ----------------
-URN\:NBN is system for registration and assigning of special codes for electronic publications (it may look like this: \`urn:nbn:cz:edep-00000s``). The codes can be then used to resolve (translate) the code to metadata information about publication and/or to get pointer to actual digital instance of the publication (=file).
+URN\:NBN is system for registration and assigning of special codes for electronic publications (it may look like this: ``urn:nbn:cz:edep-00000s``). The codes can be then used to resolve (translate) the code to metadata information about publication and/or to get pointer to actual digital instance of the publication (=file).
 
 The system works like `magnet`_ used by the popular torrent programs and websites. Once you have the URN, you can query independent resolvers (torrent trackers), which then points you to libraries (users), who store copy of the document (file).
 
