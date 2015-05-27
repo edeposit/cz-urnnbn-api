@@ -50,6 +50,9 @@ class URN_NBN(str):
 
     @staticmethod
     def from_xmldict(xdom, tag_picker=lambda x: x["response"]["urnNbn"]):
+        """
+        Parse itself from `xmldict` structure.
+        """
         urn_nbn_tag = tag_picker(xdom)
 
         return URN_NBN(

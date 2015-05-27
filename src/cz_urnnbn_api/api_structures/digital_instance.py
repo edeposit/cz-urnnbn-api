@@ -17,13 +17,13 @@ class DigitalInstance(KwargsObj):
     Container used to hold informations about instances of the documents in
     digital library - this is pointer to document in digital library.
 
-    Atrributes:
+    Attributes:
         uid (str): ID of the library.
         url (str): URL of the library.
         digital_library_id (str): Id of the digitial library.
         active (bool, def. None): Is the record active?
         created (str, def. None): ISO 8601 string with date.
-        deactivated (str, def. None) ISO 8601 string with date.
+        deactivated (str, def. None): ISO 8601 string representation of date.
         format (str, def. None): Format of the book. ``jpg;pdf`` for example.
         accessibility (str, def. None): Free description of accessibility.
     """

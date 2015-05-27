@@ -22,6 +22,20 @@ from kwargs_obj import KwargsObj
 class MonographComposer(KwargsObj):
     """
     Compostition class for Monograph publications.
+
+    Attributes:
+        title (str, required):  Title of the publication.
+        subtitle (str): Subtitle of the publication.
+        ccnb (str): CCNB number.
+        isbn (str): ISBN string. You should validate this first.
+        other_id (str): Useful for UUID and so on..
+        document_type (str): Electronic? Scan?
+        digital_born (bool): Was the publication digitally born, or is it scan?
+        author (str): Author of the publication.
+        publisher (str): Publishers name.
+        place (str): Place where the publication was published (usually city).
+        year (str): Year when the publication was published.
+        format (str, required): PDF? EPUB?
     """
     def __init__(self, **kwargs):
         self.title = None
@@ -198,6 +212,21 @@ class MonographComposer(KwargsObj):
 class MultiMonoComposer(MonographComposer):
     """
     Composition class for Multi monograph XMLs for URN:NBN.
+
+    Attributes:
+        title (str, required):  Title of the publication.
+        volume_title (str, required): Title of the whole volume.
+        subtitle (str): Subtitle of the publication.
+        ccnb (str): CCNB number.
+        isbn (str): ISBN string. You should validate this first.
+        other_id (str): Useful for UUID and so on..
+        document_type (str): Electronic? Scan?
+        digital_born (bool): Was the publication digitally born, or is it scan?
+        author (str): Author of the publication.
+        publisher (str): Publishers name.
+        place (str): Place where the publication was published (usually city).
+        year (str): Year when the publication was published.
+        format (str, required): PDF? EPUB?
     """
     def __init__(self, **kwargs):
         self.volume_title = None

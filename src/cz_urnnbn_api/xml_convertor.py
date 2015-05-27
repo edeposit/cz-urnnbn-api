@@ -4,7 +4,7 @@
 # Interpreter version: python 2.7
 #
 """
-This module contains convertors for converting MODS to XML required by URN:NBN
+This module contains convertors for converting MODS to XML required by URN\:NBN
 project.
 
 See:
@@ -21,6 +21,10 @@ from xml_composer import MultiMonoComposer
 
 # Functions & classes =========================================================
 class MonographPublication(object):
+    """
+    This class accepts MODS monographic data, which can then convert to XML
+    for URN\:NBN.
+    """
     def __init__(self, mods_xml):
         self.mods_xml = mods_xml
         self.dom = dhtmlparser.parseString(mods_xml)
@@ -226,6 +230,9 @@ class MonographPublication(object):
 
 
 class MonographVolume(MonographPublication):
+    """
+    Conversion of Multi-monograph data to XML required by URN\:NBN.
+    """
     def __init__(self, mods_xml):
         super(MonographVolume, self).__init__(mods_xml)
 

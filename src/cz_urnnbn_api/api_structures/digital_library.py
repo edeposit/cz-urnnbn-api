@@ -13,7 +13,7 @@ class DigitalLibrary(object):
     Container used to hold informations about given digital library, where the
     document to which the URN:NBN points, stored.
 
-    Atrributes:
+    Attributes:
         url (str): URL of the library.
         uid (str): ID of the library.
         name (str): Name of the digital library.
