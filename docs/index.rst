@@ -29,7 +29,7 @@ The package itself is split into multiple files.
 File relations
 ++++++++++++++
 
-Import relations of files in project:
+Import relations of files:
 
 .. image:: /_static/relations.png
     :width: 400px
@@ -37,7 +37,7 @@ Import relations of files in project:
 Class relations
 +++++++++++++++
 
-Relations of the classes in project:
+Relations of the classes:
 
 .. image:: /_static/class_relations.png
     :width: 400px
