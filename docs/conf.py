@@ -50,7 +50,7 @@ try:
     sys.path.insert(0, os.path.abspath('../'))
     from docs import getVersion
     release = getVersion(open("../CHANGES.rst").read())
-except:
+except Exception:
     # this is here specially for readthedocs, which downloads only docs, not
     # other files
     fh = urllib.urlopen("https://pypi.python.org/pypi/" + project + "/")
@@ -81,12 +81,3 @@ html_show_sourcelink = True
 
 # Output file base name for HTML help builder.
 htmlhelp_basename = 'cz-urnnbn-api'
-
-# used to skip unwanted parts in some namedtuples
-def maybe_skip_member(app, what, name, obj, skip, options):
-    if what == "class" and name.startswith("_") or name in ["index", "count"]:
-        return True
-    return skip
-
-def setup(app):
-    app.connect('autodoc-skip-member', maybe_skip_member)
