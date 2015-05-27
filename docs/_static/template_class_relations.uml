@@ -1,0 +1,148 @@
+class str {
+    String class in python.
+}
+
+class KwargsObj {
+    Handling of **kwargs
+    for _​_init_​_().
+    ---
+}
+
+package cz_urnnbn_api {
+    package api_structures {
+        class URN_NBN {
+            Parsed informations about
+            URN:NBN.
+            ---
+            .value
+            .status
+            .registered
+            .country_code
+            .document_code
+            .registrar_code
+            .digital_document_id
+            $templater:struct:api_structures/urn_nbn
+        }
+        class DigitalLibrary {
+            Informations about
+            digital libraries.
+            ---
+            .url
+            .uid
+            .name
+            .created
+            .description
+            $templater:struct:api_structures/digital_library
+        }
+        class DigitalInstance {
+            Pointer to file with publication.
+            ---
+            .url
+            .digital_library_id
+            .uid
+            .active
+            .format
+            .created
+            .accessibility
+            .deactivated
+            $templater:struct:api_structures/digital_instance
+        }
+        class Catalog {
+            Informations about
+            catalogs with metadata
+            informations.
+            ---
+            $templater:struct:api_structures/catalog
+        }
+        class Modes {
+            Informations about
+            modes which.
+            ---
+            .by_resolver
+            .by_registrar
+            .by_reservation
+            $templater:struct:api_structures/modes
+        }
+        class Registrar {
+            Informations about producent
+            or institution which uploaded
+            the data.
+            ---
+            .uid
+            .code
+            .name
+            .created
+            .modified
+            .description
+            .modes
+            .catalogs
+            .digital_libraries
+            $templater:struct:api_structures/registrar
+        }
+    }
+
+    str .d.|> URN_NBN: extends
+    KwargsObj .d.|> DigitalInstance: subclass
+
+    Modes --> Registrar: uses
+    Catalog --> Registrar: uses
+    DigitalLibrary --> Registrar: uses
+
+    package xml_composer {
+        class MonographComposer {
+            XML composer for registering
+            monographic publications.
+            ---
+            .title
+            .subtitle
+            .ccnb
+            .isbn
+            .other_id
+            .document_type
+            .digital_born
+            .author
+            .publisher
+            .place
+            .year
+            .format
+            $templater:struct:xml_composer
+        }
+        class MultiMonoComposer {
+            XML composer for registering
+            multi-monographic publications.
+            ---
+            .title
+            .subtitle
+            .volume_title
+            .ccnb
+            .isbn
+            .other_id
+            .document_type
+            .digital_born
+            .author
+            .publisher
+            .place
+            .year
+            .format
+            $templater:struct:xml_composer
+        }
+    }
+
+    class api as "api.py" <<M, Green>> {
+        ---
+        $templater:module:api
+    }
+
+    api -u-> URN_NBN: emits
+    api --> Registrar: emits
+    DigitalInstance <--> api: uses/emits
+
+    DigitalLibrary --> api
+    Catalog --> api
+    Modes --> api
+
+    MonographComposer --> api: accepts
+    MultiMonoComposer --> api: accepts
+
+    KwargsObj .d.|> MonographComposer: subclass
+}

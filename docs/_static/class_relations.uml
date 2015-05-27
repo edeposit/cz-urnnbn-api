@@ -1,0 +1,163 @@
+class str {
+    String class in python.
+}
+
+class KwargsObj {
+    Handling of **kwargs
+    for _​_init_​_().
+    ---
+}
+
+package cz_urnnbn_api {
+    package api_structures {
+        class URN_NBN {
+            Parsed informations about
+            URN:NBN.
+            ---
+            .value
+            .status
+            .registered
+            .country_code
+            .document_code
+            .registrar_code
+            .digital_document_id
+            URN_NBN.from_xmldict()
+        }
+        class DigitalLibrary {
+            Informations about
+            digital libraries.
+            ---
+            .url
+            .uid
+            .name
+            .created
+            .description
+        }
+        class DigitalInstance {
+            Pointer to file with publication.
+            ---
+            .url
+            .digital_library_id
+            .uid
+            .active
+            .format
+            .created
+            .accessibility
+            .deactivated
+            .to_xml()
+            DigitalInstance.from_xml()
+            DigitalInstance.instance_from_xmldict()
+        }
+        class Catalog {
+            Informations about
+            catalogs with metadata
+            informations.
+            ---
+            .created
+            .name
+            .uid
+            .url_prefix
+        }
+        class Modes {
+            Informations about
+            modes which.
+            ---
+            .by_resolver
+            .by_registrar
+            .by_reservation
+            Modes.from_xmldict()
+        }
+        class Registrar {
+            Informations about producent
+            or institution which uploaded
+            the data.
+            ---
+            .uid
+            .code
+            .name
+            .created
+            .modified
+            .description
+            .modes
+            .catalogs
+            .digital_libraries
+            Registrar.from_xmldict()
+        }
+    }
+
+    str .d.|> URN_NBN: extends
+    KwargsObj .d.|> DigitalInstance: subclass
+
+    Modes --> Registrar: uses
+    Catalog --> Registrar: uses
+    DigitalLibrary --> Registrar: uses
+
+    package xml_composer {
+        class MonographComposer {
+            XML composer for registering
+            monographic publications.
+            ---
+            .title
+            .subtitle
+            .ccnb
+            .isbn
+            .other_id
+            .document_type
+            .digital_born
+            .author
+            .publisher
+            .place
+            .year
+            .format
+            .to_xml()
+            .to_xml_dict()
+        }
+        class MultiMonoComposer {
+            XML composer for registering
+            multi-monographic publications.
+            ---
+            .title
+            .subtitle
+            .volume_title
+            .ccnb
+            .isbn
+            .other_id
+            .document_type
+            .digital_born
+            .author
+            .publisher
+            .place
+            .year
+            .format
+            .to_xml()
+            .to_xml_dict()
+        }
+    }
+
+    class api as "api.py" <<M, Green>> {
+        ---
+        is_valid_reg_code(reg_code)
+        iter_registrars()
+        get_registrar_info(reg_code)
+        register_document_obj(xml_composer, reg_code)
+        register_document(xml, reg_code)
+        register_digital_instance_obj(urn_nbn, digital_instance)
+        register_digital_instance(urn_nbn, url, digital_library_id, format, accessibility)
+        get_digital_instances(urn_nbn)
+        get_urn_nbn_info(urn_nbn)
+        get_full_urn_nbn_record(urn_nbn)
+    }
+
+    api -u-> URN_NBN: emits
+    api --> Registrar: emits
+    DigitalInstance <--> api: uses/emits
+
+    DigitalLibrary --> api
+    Catalog --> api
+    Modes --> api
+
+    MonographComposer --> api: accepts
+    MultiMonoComposer --> api: accepts
+
+    KwargsObj .d.|> MonographComposer: subclass
+}
