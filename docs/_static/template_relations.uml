@@ -1,0 +1,106 @@
+package cz_urnnbn_api {
+    package api_structures {
+        class struct_init as "_​_init__.py" <<M, Green>> {
+            Imports all structures to be
+            accessible at package level.
+            ---
+            $templater:module:api_structures/__init__
+        }
+        class catalog as "catalog.py" <<M, Green>> {
+            Informations about
+            metadata catalogs.
+
+            Used for authors.
+            ---
+            $templater:module:api_structures/catalog
+        }
+        class digital_instance as "digital_instance.py" <<M, Green>> {
+            Pointer to files in
+            digital libraries.
+            ---
+            $templater:module:api_structures/digital_instance
+        }
+        class digital_library as "digital_library.py" <<M, Green>> {
+            Informations about
+            digital library.
+            ---
+            $templater:module:api_structures/digital_library
+        }
+        class registrar as "registrar.py" <<M, Green>> {
+            Informations about
+            registrars
+            ---
+            $templater:module:api_structures/registrar
+        }
+        class modes as "modes.py" <<M, Green>> {
+            Definition of modes which
+            may be used by registrar.
+            ---
+            $templater:module:api_structures/modes
+        }
+        class urn_nbn as "urn_nbn.py" <<M, Green>> {
+            URN:NBN string
+            ---
+            $templater:module:api_structures/urn_nbn
+        }
+        class tools as "tools.py" <<M, Green>> {
+            Functions shared by structures.
+            ---
+            $templater:module:api_structures/tools
+        }
+    }
+    modes -d-> registrar: uses
+    catalog -d-> registrar: uses
+    digital_library -d-> registrar: uses
+
+    catalog ..> struct_init: imported
+    digital_instance ..> struct_init: imported
+    digital_library ..> struct_init: imported
+    modes ..> struct_init: imported
+    urn_nbn ..> struct_init: imported
+    registrar ..> struct_init: imported
+
+    tools --> digital_instance: uses
+    tools --> digital_library: uses
+    tools --> registrar: uses
+
+
+    class api as "api.py" <<M, Green>> {
+        Functions used to work with API.
+        ---
+        $templater:module:api
+    }
+    class xml_composer as "xml_composer.py" <<M, Green>> {
+        Module used to compose
+        XML for registration
+        of new digital document.
+        ---
+        $templater:module:xml_composer
+    }
+    class xml_convertor as "xml_convertor.py" <<M, Green>> {
+        Convertor from MODS to XML which is required by URN:NBN.
+        ---
+        $templater:module:xml_convertor
+    }
+    class settings as "settings.py" <<M, Green>> {
+        Settings for the
+        package - username
+        and so on.
+        ---
+        $templater:module:settings
+    }
+    class init as "_​_init__.py" <<M, Green>> {
+        Imports of all
+        important objects.
+        ---
+    }
+
+    struct_init --> api: uses
+    settings -l> api: uses
+    xml_composer -r> api: uses
+
+    api ..> init
+    struct_init ..> init
+    xml_composer .d.> init
+    xml_convertor ..> init
+}

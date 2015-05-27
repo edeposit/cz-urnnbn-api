@@ -1,0 +1,120 @@
+package cz_urnnbn_api {
+    package api_structures {
+        class struct_init as "_​_init__.py" <<M, Green>> {
+            Imports all structures to be
+            accessible at package level.
+            ---
+        }
+        class catalog as "catalog.py" <<M, Green>> {
+            Informations about
+            metadata catalogs.
+
+            Used for authors.
+            ---
+            class Catalog
+        }
+        class digital_instance as "digital_instance.py" <<M, Green>> {
+            Pointer to files in
+            digital libraries.
+            ---
+            class DigitalInstance
+        }
+        class digital_library as "digital_library.py" <<M, Green>> {
+            Informations about
+            digital library.
+            ---
+            class DigitalLibrary
+        }
+        class registrar as "registrar.py" <<M, Green>> {
+            Informations about
+            registrars
+            ---
+            class Registrar
+        }
+        class modes as "modes.py" <<M, Green>> {
+            Definition of modes which
+            may be used by registrar.
+            ---
+            class Modes
+        }
+        class urn_nbn as "urn_nbn.py" <<M, Green>> {
+            URN:NBN string
+            ---
+            class URN_NBN
+        }
+        class tools as "tools.py" <<M, Green>> {
+            Functions shared by structures.
+            ---
+            both_set_and_different(first, second)
+            to_list(tag)
+        }
+    }
+    modes -d-> registrar: uses
+    catalog -d-> registrar: uses
+    digital_library -d-> registrar: uses
+
+    catalog ..> struct_init: imported
+    digital_instance ..> struct_init: imported
+    digital_library ..> struct_init: imported
+    modes ..> struct_init: imported
+    urn_nbn ..> struct_init: imported
+    registrar ..> struct_init: imported
+
+    tools --> digital_instance: uses
+    tools --> digital_library: uses
+    tools --> registrar: uses
+
+
+    class api as "api.py" <<M, Green>> {
+        Functions used to work with API.
+        ---
+        is_valid_reg_code(reg_code)
+        iter_registrars()
+        get_registrar_info(reg_code)
+        register_document_obj(xml_composer, reg_code)
+        register_document(xml, reg_code)
+        register_digital_instance_obj(urn_nbn, digital_instance)
+        register_digital_instance(urn_nbn, url, digital_library_id, format, accessibility)
+        get_digital_instances(urn_nbn)
+        get_urn_nbn_info(urn_nbn)
+        get_full_urn_nbn_record(urn_nbn)
+    }
+    class xml_composer as "xml_composer.py" <<M, Green>> {
+        Module used to compose
+        XML for registration
+        of new digital document.
+        ---
+        class MonographComposer
+        class MultiMonoComposer
+    }
+    class xml_convertor as "xml_convertor.py" <<M, Green>> {
+        Convertor from MODS to XML which is required by URN:NBN.
+        ---
+        convert_mono_xml(mods_xml, file_format)
+        convert_mono_volume_xml(mods_volume_xml, file_format)
+        class MonographPublication
+        class MonographVolume
+    }
+    class settings as "settings.py" <<M, Green>> {
+        Settings for the
+        package - username
+        and so on.
+        ---
+        get_all_constants()
+        substitute_globals(config_dict)
+    }
+    class init as "_​_init__.py" <<M, Green>> {
+        Imports of all
+        important objects.
+        ---
+    }
+
+    struct_init --> api: uses
+    settings -l> api: uses
+    xml_composer -r> api: uses
+
+    api ..> init
+    struct_init ..> init
+    xml_composer .d.> init
+    xml_convertor ..> init
+}
