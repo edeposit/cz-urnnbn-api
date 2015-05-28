@@ -40,7 +40,7 @@ class Modes(object):
     Container holding informations about modes which may be used by registrar
     to register documents.
 
-    Atrributes:
+    Attributes:
         by_resolver (bool): True if the mode can be used.
         by_registrar (bool): True if the mode can be used.
         by_reservation (bool): True if the mode can be used.
