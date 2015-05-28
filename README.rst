@@ -12,7 +12,7 @@ Introduction
 
 .. image:: https://img.shields.io/pypi/l/cz-urnnbn-api.svg
 
-.. image:: https://img.shields.io/github/issues/edeposit/cz-urnnbn-api.svg?style=plastic
+.. image:: https://img.shields.io/github/issues/edeposit/cz-urnnbn-api.svg
     :target: https://github.com/edeposit/cz-urnnbn-api/issues
 
 Python API for czech `URN:NBN resolver <https://resolver.nkp.cz/>`_ (`documentation <https://code.google.com/p/urnnbn-resolver-v2/>`_).
