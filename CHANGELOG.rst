@@ -1,6 +1,14 @@
 Changelog
 =========
 
+0.2.2
+-----
+    - Fixed another bug in build system.
+
+0.2.1
+-----
+    - Fixed bug in build system.
+
 0.2.0
 -----
     - Added docstrings.
