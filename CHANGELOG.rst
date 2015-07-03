@@ -1,6 +1,10 @@
 Changelog
 =========
 
+0.2.3
+-----
+    - Added requirements to requests.
+
 0.2.2
 -----
     - Fixed another bug in build system.
