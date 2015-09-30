@@ -144,7 +144,12 @@ class MonographPublication(object):
         if not self._get_description():
             return
 
-        return self._get_description().get("mods:dateIssued", None)
+        year = self._get_description().get("mods:dateIssued", None)
+
+        if "#text" in year:
+            return year["#text"]
+
+        return year
 
     def get_identifier(self, name):
         """

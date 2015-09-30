@@ -1,6 +1,10 @@
 Changelog
 =========
 
+0.2.4
+-----
+    - Fixed bug in ``MonographPublication.get_year()``.
+
 0.2.3
 -----
     - Added requirements to requests.
