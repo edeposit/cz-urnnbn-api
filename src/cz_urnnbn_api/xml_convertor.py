@@ -12,6 +12,8 @@ See:
     - https://code.google.com/p/czidlo/wiki/ApiV3
 """
 # Imports =====================================================================
+from lxml import etree
+
 import xmltodict
 import dhtmlparser
 
@@ -20,6 +22,21 @@ from xml_composer import MultiMonoComposer
 
 
 # Functions & classes =========================================================
+def pick_only_text(fn):
+    def get_only_text(*args, **kwargs):
+        out = fn(*args, **kwargs)
+
+        if not out:
+            return out
+
+        if "#text" in out:
+            return out["#text"]
+
+        return out
+
+    return get_only_text
+
+
 class MonographPublication(object):
     """
     This class accepts MODS monographic data, which can then convert to XML
@@ -35,6 +52,7 @@ class MonographPublication(object):
     def _get_title_info(self):
         return self.xdom["mods:mods"]["mods:titleInfo"]
 
+    @pick_only_text
     def get_title(self):
         """
         Returns:
@@ -47,6 +65,7 @@ class MonographPublication(object):
 
         return title
 
+    @pick_only_text
     def get_subtitle(self):
         """
         Returns:
@@ -126,6 +145,7 @@ class MonographPublication(object):
 
         return place[0].getContent().decode("utf-8")
 
+    @pick_only_text
     def get_publisher(self):
         """
         Returns:
@@ -136,6 +156,7 @@ class MonographPublication(object):
 
         return self._get_description().get("mods:publisher", None)
 
+    @pick_only_text
     def get_year(self):
         """
         Returns:
@@ -144,13 +165,9 @@ class MonographPublication(object):
         if not self._get_description():
             return
 
-        year = self._get_description().get("mods:dateIssued", None)
+        return self._get_description().get("mods:dateIssued", None)
 
-        if "#text" in year:
-            return year["#text"]
-
-        return year
-
+    @pick_only_text
     def get_identifier(self, name):
         """
         Returns:
@@ -165,8 +182,9 @@ class MonographPublication(object):
         if not identifier:
             return
 
-        return identifier[0]["#text"]
+        return identifier[0]
 
+    @pick_only_text
     def get_ccnb(self):
         """
         Returns:
@@ -174,6 +192,7 @@ class MonographPublication(object):
         """
         return self.get_identifier("ccnb")
 
+    @pick_only_text
     def get_isbn(self):
         """
         Returns:
@@ -181,6 +200,7 @@ class MonographPublication(object):
         """
         return self.get_identifier("isbn")
 
+    @pick_only_text
     def get_uuid(self):
         """
         Returns:
@@ -243,6 +263,7 @@ class MonographVolume(MonographPublication):
 
         self.composer = MultiMonoComposer()
 
+    @pick_only_text
     def get_volume_title(self):
         """
         Returns:
