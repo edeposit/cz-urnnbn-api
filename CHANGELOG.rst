@@ -1,6 +1,10 @@
 Changelog
 =========
 
+0.2.5
+-----
+    - Small preventive improvement.
+
 0.2.4
 -----
     - Fixed bug in ``MonographPublication.get_year()``.
