@@ -12,10 +12,9 @@ See:
     - https://code.google.com/p/czidlo/wiki/ApiV3
 """
 # Imports =====================================================================
-from lxml import etree
-
 import xmltodict
 import dhtmlparser
+from dhtmlparser import first
 
 from xml_composer import MonographComposer
 from xml_composer import MultiMonoComposer
@@ -37,6 +36,18 @@ def pick_only_text(fn):
     return get_only_text
 
 
+def first_or_none(fn):
+    def get_first_or_none(*args, **kwargs):
+        out = fn(*args, **kwargs)
+
+        if not out:
+            return None
+
+        return first(out).getContent().decode("utf-8")
+
+    return get_first_or_none
+
+
 class MonographPublication(object):
     """
     This class accepts MODS monographic data, which can then convert to XML
@@ -50,37 +61,35 @@ class MonographPublication(object):
         self.composer = MonographComposer()
 
     def _get_title_info(self):
-        return self.xdom["mods:mods"]["mods:titleInfo"]
+        return self.dom.wfind(
+            "mods:mods"
+        ).wfind(
+            "mods:titleInfo",
+            fn=lambda x: x.params.get("type") != "alternative"
+        )
 
-    @pick_only_text
+    @first_or_none
     def get_title(self):
         """
         Returns:
             str: Title
         """
-        title = self._get_title_info()["mods:title"]
+        titles = self._get_title_info().find("mods:title")
 
-        if type(title) in [tuple, list]:
-            return title[0]
+        if not titles:
+            ValueError("<mods:title> element not found.")
 
-        return title
+        return titles
 
-    @pick_only_text
+    @first_or_none
     def get_subtitle(self):
         """
         Returns:
             str: Subtitle
         """
-        subtitle = self._get_title_info().get("mods:subTitle", None)
+        return self._get_title_info().find("mods:subTitle")
 
-        if not subtitle:
-            return None
-
-        if type(subtitle) in [tuple, list]:
-            return subtitle[0]
-
-        return subtitle
-
+    @first_or_none
     def get_author(self):
         """
         Returns:
@@ -104,10 +113,8 @@ class MonographPublication(object):
                 "mods:mods",
                 ["mods:name", {"type": 'conference'}]
             )
-        if not author:
-            raise ValueError("Can't find namePart for author!")
 
-        return author[0].getContent().decode("utf-8")
+        return author
 
     def get_form(self):
         """
@@ -223,10 +230,7 @@ class MonographPublication(object):
         self.composer.other_id = self.get_uuid()
         self.composer.document_type = self.get_form()
         self.composer.digital_born = True
-
-        if self.get_author():
-            self.composer.author = self.get_author()
-
+        self.composer.author = self.get_author()
         self.composer.place = self.get_place()
         self.composer.publisher = self.get_publisher()
         self.composer.year = self.get_year()

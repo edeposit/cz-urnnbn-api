@@ -1,6 +1,12 @@
 Changelog
 =========
 
+0.2.6
+-----
+    - Added @first_or_none() decorator.
+    - Fixed #24 - bug in .get_title().
+    - Added more test files.
+
 0.2.5
 -----
     - Small preventive improvement.
