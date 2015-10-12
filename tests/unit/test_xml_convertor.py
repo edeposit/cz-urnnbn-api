@@ -5,6 +5,7 @@
 #
 # Imports =====================================================================
 import os
+import os.path
 
 import pytest
 
@@ -13,6 +14,7 @@ from cz_urnnbn_api.xml_convertor import MonographPublication
 from cz_urnnbn_api.xml_convertor import convert_mono_volume_xml
 
 from test_xml_composer import data_context
+from test_xml_composer import get_data_path
 from test_xml_composer import mono_out_example
 from test_xml_composer import multimono_out_example
 
@@ -52,3 +54,21 @@ def test_year_with_attribute():
     mp = MonographPublication(example)
 
     assert mp.get_year() == "2011"
+
+
+def test_additional_conversions():
+    example_path = os.path.join(get_data_path(), "additional_examples")
+
+    example_paths = (
+        os.path.join(example_path, fn)
+        for fn in os.listdir(example_path)
+    )
+
+    examples = (
+        open(fn).read()
+        for fn in example_paths
+        if os.path.isfile(fn)
+    )
+
+    for example in examples:
+        assert convert_mono_xml(example, "pdf")

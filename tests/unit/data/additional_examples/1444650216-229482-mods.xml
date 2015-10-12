@@ -1,0 +1,77 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<mods:mods version="3.4" ID="MODS_VOLUME_0001" xmlns:mods="http://www.loc.gov/mods/v3" xmlns:xlink="http://www.w3.org/1999/xlink" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.w3.org/2001/XMLSchema-instance http://www.w3.org/2001/XMLSchema.xsd http://www.loc.gov/mods/v3 http://www.loc.gov/standards/mods/v3/mods-3-4.xsd http://www.w3.org/1999/xlink http://www.w3.org/1999/xlink.xsd">
+  <mods:titleInfo>
+    <mods:title>Lakomec</mods:title>
+  </mods:titleInfo>
+  <mods:titleInfo type="uniform" nameTitleGroup="1">
+    <mods:title>Avare. Česky</mods:title>
+  </mods:titleInfo>
+  <mods:name type="personal" usage="primary" nameTitleGroup="1">
+    <mods:namePart>Molière</mods:namePart>
+    <mods:role>
+      <mods:roleTerm authority="marcrelator" type="code">aut</mods:roleTerm>
+    </mods:role>
+  </mods:name>
+  <mods:name type="personal">
+    <mods:namePart>Vrchlický, Jaroslav</mods:namePart>
+    <mods:role>
+      <mods:roleTerm authority="marcrelator" type="code">trl</mods:roleTerm>
+    </mods:role>
+  </mods:name>
+  <mods:typeOfResource>text</mods:typeOfResource>
+  <mods:genre authority="marcgt">drama</mods:genre>
+  <mods:genre authority="czenas">francouzská dramata</mods:genre>
+  <mods:genre authority="czenas">elektronické knihy</mods:genre>
+  <mods:genre authority="eczenas">French drama</mods:genre>
+  <mods:genre authority="eczenas">electronic books</mods:genre>
+  <mods:genre>electronic volume</mods:genre>
+  <mods:originInfo>
+    <mods:place>
+      <mods:placeTerm type="code" authority="marccountry">xr-</mods:placeTerm>
+    </mods:place>
+    <mods:dateIssued encoding="marc">2012</mods:dateIssued>
+    <mods:edition>V MKP 1. vydání</mods:edition>
+    <mods:edition>Verze 1.0</mods:edition>
+    <mods:issuance>single unit</mods:issuance>
+  </mods:originInfo>
+  <mods:language>
+    <mods:languageTerm authority="iso639-2b" type="code">cze</mods:languageTerm>
+  </mods:language>
+  <mods:language objectPart="translation">
+    <mods:languageTerm authority="iso639-2b" type="code">fre</mods:languageTerm>
+  </mods:language>
+  <mods:physicalDescription>
+    <mods:form authority="marccategory">text</mods:form>
+    <mods:form authority="marcsmd">regular print</mods:form>
+    <mods:extent>1 online zdroj</mods:extent>
+  </mods:physicalDescription>
+  <mods:abstract>Nakladatelská anotace: Test validní PDFA1b,zpřístupnění vybrané oprávněné, NK a MZK, Znění tohoto textu vychází z díla Lakomec tak, jak bylo vydáno vydavatelstvím J. Otty v roce 1899 (MOLIERE. Lakomec : ve901selohra o 5 jednáních. Přel. Jaroslav Vrchlický. Praha : J. Otto, 1899. 158 s. Světová knihovna. č. 111-112)</mods:abstract>
+  <mods:targetAudience authority="marctarget">general</mods:targetAudience>
+  <mods:note type="statement of responsibility">Moliere ; přel. Jaroslav Vrchlický</mods:note>
+  <mods:note>Přeloženo z francouzštiny</mods:note>
+  <mods:classification authority="udc">821.133.1-2</mods:classification>
+  <mods:classification authority="udc">(0:82-2)</mods:classification>
+  <mods:classification authority="udc">(0.034.2:08)</mods:classification>
+  <mods:location>
+    <mods:holdingSimple>
+      <mods:copyInformation>
+        <mods:electronicLocator>http://edeposit-aplikace.nkp.cz/@@redirect-to-uuid/48cccb6fc595429d884192e59f490599</mods:electronicLocator>
+      </mods:copyInformation>
+    </mods:holdingSimple>
+  </mods:location>
+  <mods:identifier type="uuid">48cccb6fc595429d884192e59f490599</mods:identifier>
+  <mods:identifier type="ccnb">cnb000003379</mods:identifier>
+  <mods:identifier type="isbn">978-80-260-9133-2</mods:identifier>
+  <mods:recordInfo>
+    <mods:descriptionStandard>rda</mods:descriptionStandard>
+    <mods:recordContentSource authority="marcorg">ABA001</mods:recordContentSource>
+    <mods:recordCreationDate encoding="marc">151005</mods:recordCreationDate>
+    <mods:recordChangeDate encoding="iso8601">20151011124451.0</mods:recordChangeDate>
+    <mods:recordIdentifier source="CZ-PrNK">nkc20150003379</mods:recordIdentifier>
+    <mods:recordOrigin>machine generated</mods:recordOrigin>
+    <mods:languageOfCataloging>
+      <mods:languageTerm authority="iso639-2b" type="code">cze</mods:languageTerm>
+    </mods:languageOfCataloging>
+  </mods:recordInfo>
+</mods:mods>

@@ -1,0 +1,107 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<mods:mods version="3.4" ID="MODS_VOLUME_0001" xmlns:mods="http://www.loc.gov/mods/v3" xmlns:xlink="http://www.w3.org/1999/xlink" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.w3.org/2001/XMLSchema-instance http://www.w3.org/2001/XMLSchema.xsd http://www.loc.gov/mods/v3 http://www.loc.gov/standards/mods/v3/mods-3-4.xsd http://www.w3.org/1999/xlink http://www.w3.org/1999/xlink.xsd">
+  <mods:titleInfo>
+    <mods:title>Aphḫazethi</mods:title>
+    <mods:subTitle>Sakharthvelos kulturuli memkvidreoba = Abchazija : kul'turnoje nasledije Gruzii = Abkhazeti : Georgian cultural heritage</mods:subTitle>
+  </mods:titleInfo>
+  <mods:titleInfo type="alternative">
+    <mods:title>Sakharthvelos kulturuli memkvidreoba - Aphḫazithi</mods:title>
+  </mods:titleInfo>
+  <mods:titleInfo type="alternative">
+    <mods:title>Kul'turnoje nasledije Gruzii - Abchazija</mods:title>
+  </mods:titleInfo>
+  <mods:titleInfo type="alternative">
+    <mods:title>Georgian cultural heritage - Abkhazeti</mods:title>
+  </mods:titleInfo>
+  <mods:titleInfo type="alternative">
+    <mods:title>Abchazija</mods:title>
+  </mods:titleInfo>
+  <mods:titleInfo type="alternative">
+    <mods:title>Abkhazeti</mods:title>
+  </mods:titleInfo>
+  <mods:typeOfResource>text</mods:typeOfResource>
+  <mods:genre authority="czenas">přehledy</mods:genre>
+  <mods:genre authority="czenas">obrazové publikace</mods:genre>
+  <mods:genre authority="czenas">elektronické knihy</mods:genre>
+  <mods:genre authority="eczenas">surveys</mods:genre>
+  <mods:genre authority="eczenas">pictorial works</mods:genre>
+  <mods:genre authority="eczenas">electronic books</mods:genre>
+  <mods:genre>electronic volume</mods:genre>
+  <mods:originInfo>
+    <mods:place>
+      <mods:placeTerm type="code" authority="marccountry">xr-</mods:placeTerm>
+    </mods:place>
+    <mods:dateIssued encoding="marc">2007</mods:dateIssued>
+    <mods:issuance>single unit</mods:issuance>
+  </mods:originInfo>
+  <mods:language>
+    <mods:languageTerm authority="iso639-2b" type="code">geo</mods:languageTerm>
+  </mods:language>
+  <mods:language>
+    <mods:languageTerm authority="iso639-2b" type="code">rus</mods:languageTerm>
+  </mods:language>
+  <mods:language>
+    <mods:languageTerm authority="iso639-2b" type="code">eng</mods:languageTerm>
+  </mods:language>
+  <mods:physicalDescription>
+    <mods:form authority="marccategory">electronic resource</mods:form>
+    <mods:form authority="marcsmd">remote</mods:form>
+    <mods:extent>1 online zdroj : barevné ilustrace</mods:extent>
+  </mods:physicalDescription>
+  <mods:abstract>Nakladatelská anotace: test velkého PDF souboru, prosím poslat do zpracování, i když text je cizojazyčný a originál je do souboru vložen 5x za sebou. Děkuji A. Zalejská</mods:abstract>
+  <mods:targetAudience authority="marctarget">adult</mods:targetAudience>
+  <mods:note type="language">V gruzínském originále se souběžným ruským a anglickým překladem</mods:note>
+  <mods:subject>
+    <mods:geographicCode authority="marcgac">a-gs---</mods:geographicCode>
+  </mods:subject>
+  <mods:subject authority="czenas">
+    <mods:topic>kulturní dědictví</mods:topic>
+    <mods:geographic>Gruzie</mods:geographic>
+  </mods:subject>
+  <mods:subject authority="czenas">
+    <mods:topic>kulturní památky</mods:topic>
+    <mods:geographic>Gruzie</mods:geographic>
+  </mods:subject>
+  <mods:subject authority="eczenas">
+    <mods:topic>cultural heritage</mods:topic>
+    <mods:geographic>Georgia (Republic)</mods:geographic>
+  </mods:subject>
+  <mods:subject authority="eczenas">
+    <mods:topic>cultural monuments</mods:topic>
+    <mods:geographic>Georgia (Republic)</mods:geographic>
+  </mods:subject>
+  <mods:subject authority="czenas">
+    <mods:geographic>Abchazsko (Gruzie)</mods:geographic>
+  </mods:subject>
+  <mods:subject authority="eczenas">
+    <mods:geographic>Abkhazia (Georgia)</mods:geographic>
+  </mods:subject>
+  <mods:classification authority="udc">930.85</mods:classification>
+  <mods:classification authority="udc">904</mods:classification>
+  <mods:classification authority="udc">(479.224)</mods:classification>
+  <mods:classification authority="udc">(048.8)</mods:classification>
+  <mods:classification authority="udc">(084.11)</mods:classification>
+  <mods:classification authority="udc">(0.034.2:08)</mods:classification>
+  <mods:location>
+    <mods:holdingSimple>
+      <mods:copyInformation>
+        <mods:electronicLocator>http://web2.mlp.cz/koweb/00/03/99/06/91/aphhazethi.pdf</mods:electronicLocator>
+      </mods:copyInformation>
+    </mods:holdingSimple>
+  </mods:location>
+  <mods:identifier type="uuid">ba1a6aa825484ea5b5c25485e017a006</mods:identifier>
+  <mods:identifier type="ccnb">cnb000003380</mods:identifier>
+  <mods:identifier type="isbn">978-80-260-9134-9</mods:identifier>
+  <mods:recordInfo>
+    <mods:descriptionStandard>rda</mods:descriptionStandard>
+    <mods:recordContentSource authority="marcorg">ABA001</mods:recordContentSource>
+    <mods:recordCreationDate encoding="marc">151005</mods:recordCreationDate>
+    <mods:recordChangeDate encoding="iso8601">20151008121432.0</mods:recordChangeDate>
+    <mods:recordIdentifier source="CZ-PrNK">nkc20150003380</mods:recordIdentifier>
+    <mods:recordOrigin>machine generated</mods:recordOrigin>
+    <mods:languageOfCataloging>
+      <mods:languageTerm authority="iso639-2b" type="code">cze</mods:languageTerm>
+    </mods:languageOfCataloging>
+  </mods:recordInfo>
+</mods:mods>
